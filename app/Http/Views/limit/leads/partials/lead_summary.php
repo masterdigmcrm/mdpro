@@ -1,19 +1,13 @@
 <div id="leadSummary" class="vDiv hide">
     <div class="panel panel-flat">
         <div class="panel-heading" style="padding: 8px">
-            <div class="col-lg-6">
-            </div>
-            <div class="col-lg-6" style="text-align: right">
-                <div class="" style="margin:4px 0px 0px 0px">
+            <div class="" style="text-align: right">
+                <div class="" style="">
                     <a href="javascript:" v-on:click="deletelead( lead.leadid )" class="btn btn-default">
                         <i class="fa fa-trash-o font-white"></i>
                     </a>
-                    <a href="javascript:" v-on:click="editleadsummary( lead.leadid )" class="btn btn-default">
-                        <i class="fa fa-edit"></i>
-                    </a>
-                    <a href="javascript:" class="btn btn-default" @click="closeSummary">
-                        <i class="fa fa-close"></i>
-                    </a>
+                    <a href="javascript:" @click="editlead(lead.leadid)" class="btn btn-default"><i class="fa fa-edit"></i></a>
+                    <a href="javascript:" class="btn btn-default" @click="closeSummary"><i class="fa fa-close"></i></a>
                 </div>
             </div>
         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Models\Leads;
 
+use App\Models\Accounts\AccountEntity;
 use App\Models\BaseModel;
 use Illuminate\Http\Request;
 
@@ -47,6 +48,7 @@ class LeadEntity extends BaseModel{
             $this->converted = 0;
         }
 
+        $this->assigned_to = $r->assigned_to ? $r->assigned_to : AccountEntity::me()->userid;
         $this->save();
 
         return $this;

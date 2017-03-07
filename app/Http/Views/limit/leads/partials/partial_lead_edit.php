@@ -127,7 +127,7 @@
         </div>
 
         <input type="hidden" name="lead-index" id="lead-index" value="-1" />
-        <input type="hidden" name="leadid" id="leadid" value="" :vlaue="lead.leadid"/>
+        <input type="hidden" name="leadid" id="leadid" value="" :value="lead.leadid"/>
         <input type="hidden" name="ownerid" id="ownerid" value="<?php echo \App\Models\Users\UserEntity::me()->id ?>" />
         <input type="hidden" name="brokerid" id="brokerid" value="<?php echo \App\Models\Accounts\AccountEntity::me()->brokerid ?>" />
 
