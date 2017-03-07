@@ -17,12 +17,12 @@ if( \Request::segment(1) == 'component'){
 
         if( \Request::segment(2) == 'properties'){
             Route::group( ['prefix'=>'properties',  'namespace'=> 'Components\Properties' ], function(){
-                require_once( __DIR__.'\web\route_properties.php');
+                require_once( __DIR__.'/web/route_properties.php');
             });
         }
         if( in_array( \Request::segment(2), [ 'leads' , 'lead' ]   ) ){
             Route::group( ['prefix'=>'leads',  'namespace'=> 'Components\Leads', 'middleware' => 'auth.md' ], function(){
-                require_once( __DIR__.'\web\route_leads.php');
+                require_once( __DIR__.'/web/route_leads.php');
             });
         }
     });
@@ -40,7 +40,7 @@ if( \Request::segment(1) == 'admin'){
 
 if( \Request::segment(1) == 'ajax'){
     Route::group( ['prefix'=>'ajax', 'middleware' => ['auth.md' , 'ajax'] ], function(){
-        require_once( __DIR__.'\web\route_ajax.php');
+        require_once( __DIR__.'/web/route_ajax.php');
     });
 }
 /**************************************/
