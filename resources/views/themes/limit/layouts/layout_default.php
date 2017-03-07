@@ -78,8 +78,11 @@
             <div class="category-content">
                 <div class="media">
                     <a href="#" class="media-left">
+                        <!--
                         <img src="<?php echo \App\Models\Users\UserEntity::me()->imagePath ? \App\Models\Users\UserEntity::me()->imagePath  :
                             '/themes/limit/images/image.png' ?>" class="img-circle img-sm" alt="">
+                        -->
+                        <img src="/themes/limit/images/image.png" alt="" class="img-circle img-sm" />
                     </a>
                     <div class="media-body">
                         <span class="media-heading text-semibold"><?php echo \App\Models\Users\UserEntity::me()->name ?></span>
