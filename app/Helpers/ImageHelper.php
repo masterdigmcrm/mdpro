@@ -22,11 +22,12 @@ class ImageHelper {
         /**
          * Rotate image if its not oriented properly
          */
+        /**
         if( $image->exif( 'Orientation' ) == 8 ){
             $image->rotate( 90 );
             $image->save();
         }
-
+        **/
         // set the width twice as the height
         // this is used for CMS images
 

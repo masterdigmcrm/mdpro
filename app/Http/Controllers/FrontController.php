@@ -41,7 +41,7 @@ class FrontController extends FrontBaseController{
             // manually login user
 
             \Auth::loginUsingId( $user->id );
-            return redirect('dashboard');
+            return redirect('components/properties');
 
         }
 
