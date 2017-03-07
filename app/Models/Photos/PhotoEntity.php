@@ -82,7 +82,7 @@ class PhotoEntity extends BaseModel{
         $this->is_transfer = 0;
         $this->params = '';
         $this->ordering = $photo_count + 1;
-        
+
         $this->save();
 
         return $this;
