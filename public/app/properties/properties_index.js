@@ -14,21 +14,47 @@ var pVue = new Vue({
         cities:[],
         city_selection:[],
         progress: 0,
-        transaction_types:['For Sale','For Rent']
-        /***models****/
-
+        transaction_types:['For Sale','For Rent'],
+        total: 0,
+        offset: 0,
+        page:1,
+        limit:20,
+        searching:false
 
     },
     methods:{
+        nextPage(){
+            let vm = this;
+            this.page = this.page + 1;
+            setTimeout( function(){
+                vm.getProperties();
+            }, 200 )
+
+        },
+        previousPage(){
+            let vm = this;
+            this.page = this.page - 1;
+            setTimeout( function(){
+                vm.getProperties();
+            }, 200 );
+
+        },
         getProperties(){
             let vm = this;
-            $.get( '/ajax/properties/get' )
+
+            this.searching = true;
+            vm.properties = [];
+
+            $.get( '/ajax/properties/get' , $('#sForm').serialize()  )
             .done(function( data ){
                 if(data.success){
                     vm.properties = data.properties;
+                    vm.total = data.count;
+                    vm.offset = data.offset;
                 }else{
                     toastr.error( data.message );
                 }
+                vm.searching = false;
             });
         },
         init(){
@@ -213,7 +239,11 @@ var pVue = new Vue({
         search( e ){
             let vm = this;
             $('.btn').prop('disabled', true );
-            $(e.target).html('<i class="fa fa-refresh fa-spin"></i>');
+            //$(e.target).html('<i class="fa fa-refresh fa-spin"></i>');
+            this.page = 1;
+            setTimeout(function(){ vm.getProperties() },200);
+
+            /**
             $.get( '/ajax/properties/search' , $('#sForm').serialize() )
             .done(function( data ){
                 if( data.success){
@@ -230,6 +260,7 @@ var pVue = new Vue({
                 $('.btn').prop('disabled', false );
                 $(e.target).html('Search');
             });
+             **/
         },
         countrySelected(){
             let countryid = $('#countryid').val();
@@ -302,6 +333,20 @@ var pVue = new Vue({
     mounted:function(){
         this.init();
         this.getProperties();
+    },
+    computed:{
+        offsetFrom(){
+            if( ! this.total ){
+                return 0;
+            }
+            return this.offset + 1;
+        },
+        offsetTo(){
+            if( ! this.total ){
+                return null;
+            }
+            return ( this.offset + this.properties.length );
+        }
     }
 });
 

@@ -48,20 +48,25 @@ class PropertiesCollection extends PropertyEntity{
             $query->where( 'baths' , '>=' , $r->baths );
         }
 
-        if( $r->min_price && $r->max_price ){
-            $query->where( 'price' , '>=' , $r->min_price );
-            $query->where( 'price' , '<=' , $r->max_price );
-        }elseif( $r->min_price ){
-            $query->where( 'price' , '>=' , $r->min_price );
-        }elseif( $r->max_price ){
-            $query->where( 'price' , '<=' , $r->max_price );
+        $min_price = str_replace( ',' ,'', $r->min_price );
+        $max_price = str_replace( ',' ,'', $r->max_price );
+
+        if( $min_price && $max_price ){
+            $query->where( 'price' , '>=' , $min_price );
+            $query->where( 'price' , '<=' , $max_price );
+
+        }elseif( $min_price ){
+            $query->where( 'price' , '>=' , $min_price );
+        }elseif( $max_price ){
+            $query->where( 'price' , '<=' , $max_price );
+        }
+
+        if( $r->typeid ){
+            $query->where( 'typeid' , $r->typeid );
         }
 
         $this->total = $query->count();
-
-        $query->limit( $this->limit );
-        $query->offset( $this->offset );
-        $query->orderBy( $this->order_by , $this->order_direction );
+        $query = $this->assignLpo( $query );
 
         $this->collection =  $query->get( $fields );
 

@@ -15,11 +15,11 @@
                         <div  class="col-lg-6 col-md-12">
                             <div class="input-group">
                                 <input class="form-control" type="text" name="q" id="q" placeholder="First Name, Last Name, Email" />
-                <span class="input-group-btn">
-                    <button id="search-btn" class="btn btn-primary search-btn" v-on:click="search()" type="button">
-                        <i class="fa fa-search"></i> <?php echo trans('leads.search') ?>
-                    </button>
-                </span>
+                                <span class="input-group-btn">
+                                    <button id="search-btn" class="btn btn-primary search-btn" v-on:click="search()" type="button">
+                                        <i class="fa fa-search"></i> <?php echo trans('leads.search') ?>
+                                    </button>
+                                </span>
                             </div>
                             <a href="javascript:;" v-on:click="advSearch()"><span>Advanced Search</span></a>
                         </div>
@@ -32,7 +32,7 @@
                                 <label><input type="checkbox" class="" id="cb-toggle"/><span></span></label>
                             </th>
                             <th scope="col">
-                                <span style="font-weight:normal"> {{displayed_lead_count}} of {{ lead_count}} </span>
+                                <span style="font-weight:normal"> {{ displayed_lead_count }} of {{ lead_count}} </span>
                                 <a id="show-more" href="javascript:;" v-on:click="showMoreLeads()" class="btn btn-sm btn-success hide show-more">
                                     More
                                 </a>

@@ -28,7 +28,9 @@ class AjaxPropertiesController {
 
         return [
             'success' =>true,
-            'properties' => $properties->getCollection( $r )
+            'properties' => $properties->getCollection( $r ),
+            'count' => $properties->getTotal(),
+            'offset' => $properties->getOffset()
         ];
     }
 

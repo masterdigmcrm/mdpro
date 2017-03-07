@@ -12,6 +12,7 @@ class BaseModel extends Model
     protected $pages     = 1;
     protected $page      = 1; // current_page
     protected $limit     = 20;
+    protected $offset = 0;
     protected $errors    = [];
     protected $collection    = [];
     protected $request;
@@ -31,6 +32,14 @@ class BaseModel extends Model
         $this->offset = ($this->page-1) * $this->limit;
         $this->order_by = $r->order_by ? $r->order_by :  $this->primaryKey;
         $this->order_direction = $r->order_direction ? $r->order_direction : 'ASC';
+    }
+
+    public function assignLpo( $query )
+    {
+        $query->limit( $this->limit );
+        $query->offset( $this->offset );
+        $query->orderBy( $this->order_by , $this->order_direction );
+        return $query;
     }
 
     public function getLimit()
@@ -100,7 +109,6 @@ class BaseModel extends Model
         return $this->page;
     }
 
-
     public function getErrors()
     {
         return $this->errors;
@@ -163,9 +171,9 @@ class BaseModel extends Model
         return $this;
     }
 
-    public function singleFromCollection( $id )
+    public function getOffset()
     {
-
+        return $this->offset;
     }
 
     public function getPaginationData()

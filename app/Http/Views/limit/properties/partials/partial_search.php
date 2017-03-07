@@ -10,8 +10,9 @@
     <div class="form-group">
         <label for="" class="col-sm-3">Types</label>
         <div class="col-sm-9">
-            <select name="type" class="form-control">
+            <select name="typeid" class="form-control">
                 <option value="0"> All </option>
+                <option value="" v-for="t in property_types" :value="t.typeid"> {{t.type}} </option>
             </select>
         </div>
     </div>
@@ -48,5 +49,6 @@
         </div>
     </div>
     <div class="clearfix"></div>
+    <input type="hidden" name="page" id="search_page" value="" v-model="page"/>
 </form>
 
