@@ -28,16 +28,20 @@
                             </td>
                         </tr>
                         <tr v-for="p in properties" style="cursor: pointer" @click="openProperty( p.id )">
-                            <td style="vertical-align:top;width: 90px;padding:4px ">
-                                <img src="" style="width: 82px" :src="p.p_photo.url ? p.p_photo.url : '/icons/home.png' " />
-                            </td>
-                            <td style=" vertical-align: top">
-                                <b>{{p.tag_line}}</b><br />
-                                {{p.type}}<br />
-                                <span v-show="p.beds > 0 ">{{p.beds}} Beds</span> |
-                                <span v-show="p.baths > 0 ">{{p.baths}} Baths</span>
-                                <br />
-                                <b><span style="padding: 1px;font-size: 16px"><?php echo $account->getParamByKey('currency') ?> {{p.price}}</span></b><br />
+                            <td style=" vertical-align: top ;" >
+                                <div class="row">
+                                    <div class="col-lg-2 col-sm-3 col-xs-12">
+                                        <img src="" class="img-responsive" :src="p.p_photo.url ? p.p_photo.url : '/icons/home.png' " />
+                                    </div>
+                                    <div class="col-lg-10 col-sm-9 col-xs-12">
+                                        <b>{{p.tag_line}}</b><br />
+                                        {{p.type}}<br />
+                                        <span v-show="p.beds > 0 ">{{p.beds}} Beds</span> |
+                                        <span v-show="p.baths > 0 ">{{p.baths}} Baths</span>
+                                        <br />
+                                        <b><span style="padding: 1px;font-size: 16px"><?php echo $account->getParamByKey('currency') ?> {{p.price}}</span></b><br />
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     </table>

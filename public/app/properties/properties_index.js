@@ -132,7 +132,7 @@ var pVue = new Vue({
 
                     this.property = d;
                     this.property_photos = d.photos;
-                    console.log( d.photos );
+
                     if( d.photos instanceof Array && d.photos.length ){
                         // get the primary photo
                         for( j=0; j < d.photos.length; j++ ){

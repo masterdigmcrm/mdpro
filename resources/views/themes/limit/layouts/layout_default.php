@@ -18,7 +18,9 @@
     <link href="/plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css">
     <!-- /global stylesheets -->
     <?php echo \Helpers\Layout::instance()->renderPageStyles() ?>
-
+    <style>
+        [v-cloak] { display:none; }
+    </style>
 </head>
 
 <body class="">
