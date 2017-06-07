@@ -121,11 +121,20 @@ class Layout {
 		static::instance()->addStyle( '/plugins/toastr/toastr.min.css' );
 		static::instance()->addScript( '/plugins/toastr/toastr.min.js' );
 	}
+	public static function loadCkeditor()
+	{
+		static::instance()->addScript( '/plugins/ckeditor/ckeditor.js' );
+	}
 
 	public static function loadFileupload( $file_type = null ){
 		static::instance()->addScript( '/plugins/fileupload/js/vendor/jquery.ui.widget.js' );
 		static::instance()->addScript( '/plugins/fileupload/js/jquery.iframe-transport.js' );
 		static::instance()->addScript( '/plugins/fileupload/js/jquery.fileupload.js' );
+	}
+
+	public static function loadBlockUI()
+	{
+		static::instance()->addScript( '/plugins/blockui/blockui.js' );
 	}
 
 	public static function loadVue( $version = '2.1.9')
@@ -135,6 +144,11 @@ class Layout {
 		}else{
 			static::instance()->addScript( '/plugins/vue/vue-'.$version.'.js' , 'vue' );
 		}
+	}
+
+	public static function loadlodash( $version = '4.17.4')
+	{
+		static::instance()->addScript( '/plugins/lodash/lodash-'.$version.'.js' , 'vue' );
 	}
 
 	public static function loadTablr()

@@ -25,7 +25,7 @@ class LeadsController extends ComponentsBaseController{
 
         $this->layout->content = view( 'leads.viewleads' , compact( 'account' ) );
         Layout::instance()->addScript( '/app/leads/viewleads.js' );
-
+        Layout::loadBlockUI();
         return $this->layout;
     }
 

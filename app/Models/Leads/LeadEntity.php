@@ -34,7 +34,7 @@ class LeadEntity extends BaseModel{
         $this->fill( $r->all() );
         $pk = $this->primaryKey;
 
-        $this->status = $r->status;
+        //$this->status = $r->status;
 
         if( $r->$pk  ){
             $this->exists = true;

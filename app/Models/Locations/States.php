@@ -52,4 +52,10 @@ class States extends BaseModel{
             ->get();
     }
 
+    public static function getAbbr( $state )
+    {
+        return static::where( 'state' , $state )
+            ->first();
+    }
+
 }

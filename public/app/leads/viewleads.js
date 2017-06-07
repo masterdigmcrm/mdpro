@@ -16,6 +16,7 @@ var leadsVue = new Vue({
         lead_status:[],
         lead_types:[],
         lead_sources:[],
+        lead_campaigns:[],
         todos:[],
         campaigns:[],
         postcard_leads:[],
@@ -23,6 +24,7 @@ var leadsVue = new Vue({
         lead_groups:[],
         selected_leads:[],
         group:{},
+        group_members:[],
         contact:{facebook:false,twitter:false,pinterest:false,linkedin:false,googleplus:false,youtube:false},
         states:[],
         cities:[],
@@ -54,13 +56,18 @@ var leadsVue = new Vue({
             let vm = this;
             $('.btn').prop( 'disabled' , true );
             $(e.target).html( '<i class="fa fa-spin fa-refresh"></i>');
-
+            vm.lead_campaigns = [];
             $.post( "/ajax/leads/savelead",  $('#leadForm').serialize() )
                 .done(function( data ){
                     if( data.success){
                         if(data.success){
                             toastr.success( 'Lead successfully saved' );
                             //vm.lead = data.lead;
+                            if( data.campaigns.length ){
+                                vm.lead = data.lead;
+                                vm.lead_campaigns = data.campaigns;
+                                $('#leadCampaignModal').modal();
+                            }
                         }else{
                             toastr.error( data.message );
                         }
@@ -118,6 +125,31 @@ var leadsVue = new Vue({
             }
 
         },
+        addLeadToCampaign(e){
+            let vm = this;
+            let h = $(e.target).html();
+            $('.btn').prop( 'disabled' , true );
+            $(e.target).html( '<i class="fa fa-spin fa-refresh"></i>');
+
+            $.post('/ajax/lead/addtocampaigns' , $('#leadCampaignForm').serialize() )
+            .done(function( data ){
+                if( data.success){
+                    toastr.success( 'Lead successfully added to campaign' );
+                    $('#leadCampaignModal').modal( 'toggle' );
+                    $('.btn').prop( 'disabled' , false );
+                    $(e.target).html( h );
+                }else{
+                    toastr.error( data.message );
+                    $('.btn').prop( 'disabled' , false );
+                    $(e.target).html( h );
+                }
+            })
+            .error(function( data ){
+                toastr.error('Something went wrong');
+                $('.btn').prop( 'disabled' , false );
+                $(e.target).html( h );
+            });
+        },
         showMoreLeads:function(){
             var p = $('#page');
             var next_page = parseInt(p.val()) + 1;
@@ -161,10 +193,10 @@ var leadsVue = new Vue({
         },
         saveGroup:function(){
             $('.btn').prop( 'disabled', true );
-            $.post( '/ajax/leads/savegroup' ,  $('#leadGroupForm').serialize() )
+            $.post( '/ajax/leads/save/group' ,  $('#groupForm').serialize() )
             .done( function( data ){
                 $('.btn').prop( 'disabled', false );
-                    if(data.success){
+                    if( data.success ){
                         leadsVue.$data.lead_groups.push( data.group );
                         $('#group_name').val('');
                         toastr.success( 'Group successfully saved' );
@@ -176,53 +208,205 @@ var leadsVue = new Vue({
                 toastr.error( data.message );
             })
         },
+        deleteGroup( e ){
+            if( ! confirm( 'Are you sure you want to delete this group ? ') ){
+                return;
+            }
+            let vm = this;
+            let btn = $( e.target );
+            let gid = btn.data('gid');
+            $.post( "/ajax/leads/delete/group" , { gid: gid , _token : $('input[name=_token]').val() } )
+            .done(function( data ){
+                if( data.success){
+                    for( i=0; i < vm.lead_groups.length; i++ ){
+                        d   =   vm.lead_groups[i];
+                        if( d.lead_group_id == gid ){
+                            vm.lead_groups.splice( i , 1 );
+                        }
+                    }
+                    toastr.success( 'Group successfully removed');
+                }else{
+                    toastr.error( data.message );
+                }
+            })
+            .error(function( data ){
+                toastr.error('Something went wrong');
+            });
+        },
+        showGroupLeads( gid ){
+            let vm = this;
+            this.openLeadGroupPanel( 'members_div' );
+            vm.group = $.grep( vm.lead_groups, function( g ){
+                return g.lead_group_id == gid;
+            })[0];
+
+            $.get('/ajax/leads/ggm' , {gid:gid})
+            .done(function( data ){
+                if( data.success){
+                    vm.group_members = data.members;
+                }else{
+                    toastr.error( data.message );
+                }
+            })
+            .error(function( data ){
+                toastr.error('Something went wrong');
+            });
+        },
+
+        addOneGroupToCampaign( index , groups ){
+
+            let nxt = index + 1;
+            let group_id = groups[index];
+            let vm = this;
+
+            if( group_id == undefined ){
+                toastr.error( 'Group with index '+index+' does not exists' );
+                return
+            }
+
+            let group_name = $('#grp'+group_id).data('name');
+            $.blockUI( { message: '<h5><b>Group '+group_name+' currently being added to campaigns. <br /> Please wait ... <i class="fa fa-refresh fa-spin"></i></b></h5>' } );
+
+            $.post( '/ajax/lead/groups/campaigns' , $('#leadGroupsForm').serialize()+'&group_id='+group_id )
+            .done(function( data ){
+                if( data.success){
+                    // check if group_id is last
+                    for( i=0; i < groups.length; i++ ){
+                        d = groups[ i ];
+                        if( groups[ nxt ] == undefined ){
+                            toastr.success( 'Groups successfully added to campaigns' );
+                            $.unblockUI();
+                            return; // end the script
+                        }
+                    }
+                    setTimeout(function(){
+                        vm.addOneGroupToCampaign( nxt , groups );
+                        $.blockUI( { message: '<h5><b>Group '+group_name+' currently being added to campaigns. <br /> Please wait ... <i class="fa fa-refresh fa-spin"></i></b></h5>' } );
+                    }, 2000 );
+
+                }else{
+                    toastr.error( data.message );
+                }
+            })
+            .error(function( data ){
+                toastr.error('Something went wrong');
+                $.unblockUI();
+            });
+        },
+
+        addGroupsToCampaign(){
+
+            let vm  = this;
+            let group_name , d;
+            let grp = ( $( 'input[name="grp\\[\\]"]:checked' ).map(
+                function( ){ return this.value; }
+            ).get() );
+
+            let cmp = ( $( 'input[name="cbcampaigns\\[\\]"]:checked' ).map(
+                function( ){ return this.value; }
+            ).get() );
+
+            if( ! grp.length ){
+                toastr.error( 'Please select a group' );
+                return;
+            }
+
+            if( ! cmp.length ){
+                toastr.error( 'Please select a campaign' );
+                return;
+            }
+            $('#leadGroupsModal').modal( 'toggle' );
+            this.addOneGroupToCampaign( 0 , grp );
+        },
+
+        addToCampaign(){
+            this.openLeadGroupPanel( 'lead_campaign_div' );
+            let vm = this;
+            $.get('/ajax/account/campaigns' )
+                .done(function( data ){
+                    if( data.success){
+                        vm.campaigns = data.campaigns;
+                    }else{
+                        toastr.error( data.message );
+                    }
+                })
+                .error(function( data ){
+                    toastr.error('Something went wrong');
+                });
+        },
         populateGroupList:function(){
+            let vm = this;
             if( ! this.lead_groups.length ){
                 $.get('/ajax/leads/getgroups')
-                    .done( function( data ){
-                        if( data.success ){
-                            for( i=0; i < data.groups.length; i++ ){
-                                d = data.groups[i];
-                                leadsVue.$data.lead_groups.push( d );
-                            }
+                .done( function( data ){
+                    if( data.success ){
+                        for( i=0; i < data.groups.length; i++ ){
+                            d = data.groups[i];
+                            vm.lead_groups.push( d );
                         }
-                    })
+                    }
+                })
+            }
+        },
+        openGroupList(){
+            $('#leadGroupsModal').modal();
+            if( ! this.lead_groups.length ){
+                this.populateGroupList();
             }
         },
         addToGroup:function(){
+            let vm = this;
             $('.cb:checkbox:checked').each( function(){
-                leadsVue.$data.selected_leads.push( $(this).val() )
+                vm.selected_leads.push( $(this).val() )
             });
-            if( ! leadsVue.$data.selected_leads.length ){
+            if( ! vm.selected_leads.length ){
                 toastr.error( 'You need to select a lead' );
                 return;
             }
-            $('#groupListModal').modal();
+            $('#leadGroupsModal').modal();
             this.populateGroupList();
+        },
+        saveLeadsToGroups(){
+            let vm = this;
+            let btn = $( '#altg-btn' );
+            let h  = btn.html();
+            let selected_groups = [];
+
+            $('.grp:checkbox:checked').each( function(){
+                selected_groups.push( $(this).val() )
+            });
+
+            btn.prop( 'disabled' , true );
+            btn.html( '<i class="fa fa-spin fa-refresh"></i>' );
+
+            $.post( '/ajax/leads/sltg' , { l:this.selected_leads, g: selected_groups, _token:$( "input[name=_token]").val() } )
+            .done( function( data ){
+                if( data.success ){
+                    gtext = data.group_count.length > 1 ? 'groups' : 'group';
+                    toastr.success( data.success_count+' leads successfully added to '+data.group_count+' '+gtext );
+                }
+                $('.btn').prop( 'disabled', false );
+                btn.html( h );
+            }).error(function(){
+                toastr.error( 'Something went wrong');
+                $('.btn').prop( 'disabled', false );
+                btn.html( h );
+            });
         },
         createLeadGroup:function(){
+            this.group = {};
             $( '#editLeadGroupModal' ).modal();
-            this.populateGroupList();
+            $( '#leadGroupsModal' ).modal( 'hide' );
         },
         saveLeadsToGroup:function(){
-            var gid = $('#select_lead_group_id').val()
+            var gid = $('#select_lead_group_id').val();
             $('.btn').prop( 'disabled', true );
             if( !gid ){
                 toastr.error( 'No lead group selected');
                 $('.btn').prop( 'disabled', false );
                 return
             }
-            $.post( '/ajax/leads/sl' , { l:JSON.stringify( this.selected_leads ),
-                g:gid } )
-            .done( function( data ){
-                if( data.success ){
-                    toastr.success( data.success_count+' leads successfully added to group ' );
-                }
-                $('.btn').prop( 'disabled', false );
-            }).error(function(){
-                toastr.error( 'Something went wrong');
-                $('.btn').prop( 'disabled', false );
-            });
+
         },
         sendPostcard:function(){
             $('.btn').prop( 'disabled', true );
@@ -257,7 +441,6 @@ var leadsVue = new Vue({
             });
             $('#sendPostcardModal').modal();
         },
-
         editleadDeprecated: function( idx , lid ){
             this.lead = {};
             if( idx != -1 ){
@@ -333,7 +516,6 @@ var leadsVue = new Vue({
         editleadsummary:function( lid ){
             this.editlead( $('#lead-index').val() , lid)
         },
-
         edittodo:function( idx , lid){
             $( '#addTodoModal' ).modal();
         },
@@ -576,6 +758,11 @@ var leadsVue = new Vue({
             $( '.vDiv').addClass( 'hide' );
             $('#'+panel).removeClass( 'hide' );
         },
+        openLeadGroupPanel( panel ){
+            $( '.lead_group_panel').addClass( 'hide' );
+            $('#'+panel).removeClass( 'hide' );
+        },
+
         init(){
             let vm = this;
             $.get( '/ajax/leads/init' )
@@ -603,7 +790,11 @@ var leadsVue = new Vue({
         },
         displayed_lead_count:function(){
             return this.leads.length
+        },
+        sortedGroups(){
+
         }
+
     }
 });
 

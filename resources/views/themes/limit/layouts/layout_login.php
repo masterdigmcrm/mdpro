@@ -103,6 +103,10 @@
 
 </div>
 <!-- /page container -->
-
+<script>
+    $('#sForm').submit(function(){
+        alert('submit')
+    })
+</script>
 </body>
 </html>

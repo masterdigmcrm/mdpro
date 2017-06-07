@@ -1,4 +1,4 @@
-<div id="groupListModal" class="modal fade large" role="dialog" >
+<div id="groupListModal" class="modal" role="dialog" >
     <form id="groupListForm">
         <div class="modal-dialog">
             <div class="portlet box blue">
@@ -14,7 +14,7 @@
                             <div class="form-group">
                                 <select class="form-control" id="select_lead_group_id">
                                     <option value="0"> Select </option>
-                                    <option value="{{l.lead_group_id}}" v-for="l in lead_groups | orderBy 'group_name' ">{{l.group_name}}</option>
+                                    <option value="" :value="l.lead_group_id" v-for="l in lead_groups">{{l.group_name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -37,6 +37,3 @@
     </form>
 </div>
 
-<script>
-
-</script>

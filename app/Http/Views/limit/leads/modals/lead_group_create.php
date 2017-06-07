@@ -1,4 +1,30 @@
-<div id="editLeadGroupModal" class="modal fade large" role="dialog" >
+<div id="editLeadGroupModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"></h4>
+            </div>
+
+            <div class="modal-body">
+                <form id="groupForm">
+                    <div class="form-group">
+                        <label for=""> Group Name</label>
+                        <input type="text" name="group_name" value="" id="group_name" class="form-control" />
+                    </div>
+                    <?php echo csrf_field() ?>
+                    <input type="hidden" name="lead_group_id" id="lead_group_id" value="" :value="group.lead_group_id" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @click="saveGroup">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+<div id="" class="modal fade large" role="dialog">
     <form id="leadGroupForm">
         <div class="modal-dialog">
             <div class="portlet box blue">
@@ -31,3 +57,4 @@
         <input type="hidden" name="lead_group_id" id="lead_group_id" value="{{group.lead_group_id}}" />
     </form>
 </div>
+-->

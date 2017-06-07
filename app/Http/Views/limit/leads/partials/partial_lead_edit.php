@@ -3,7 +3,7 @@
         <div class="panel panel-white">
             <div class="panel-heading">
                 <div class="pull-right">
-                    <button type="button" class="btn btn-success" v-on:click="savelead"> <i class="fa fa-save"></i> Save</button>
+                    <button type="button" class="btn btn-success" v-on:click="savelead"> Save</button>
                     <button type="button" class="btn btn-default" @click="openList"> <i class="fa fa-arrow-left"></i> Back </button>
                 </div>
                 <h4><b>{{ lead.leadid ? 'Edit' : 'New' }} Lead </b></h4>

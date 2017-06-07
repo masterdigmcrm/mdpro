@@ -14,11 +14,14 @@ class BaseModel extends Model
     protected $limit     = 20;
     protected $offset = 0;
     protected $errors    = [];
-    protected $collection    = [];
+    protected $collection    = null;
     protected $request;
 
-
     public $error_code;
+
+    public static function factory(){
+        return new static;
+    }
 
     public function getTotal()
     {
@@ -34,12 +37,12 @@ class BaseModel extends Model
         $this->order_direction = $r->order_direction ? $r->order_direction : 'ASC';
     }
 
-    public function assignLpo( $query )
+    public function assignLpo()
     {
-        $query->limit( $this->limit );
-        $query->offset( $this->offset );
-        $query->orderBy( $this->order_by , $this->order_direction );
-        return $query;
+        $this->query->limit( $this->limit );
+        $this->query->offset( $this->offset );
+        $this->query->orderBy( $this->order_by , $this->order_direction );
+        return $this->query;
     }
 
     public function getLimit()
@@ -136,6 +139,11 @@ class BaseModel extends Model
      */
     public function vuefyThisCollection()
     {
+
+        if( $this->collection === null ){
+            $this->collection = $this->query->get( $this->fields );
+        }
+
         $c_arr = [];
 
         foreach( $this->collection as $c ){
@@ -184,6 +192,14 @@ class BaseModel extends Model
             'total' => $this->getTotal(),
             'limit' => $this->getLimit()
         ];
+    }
+
+    /**
+     * @return static
+     */
+    public static function f( $id )
+    {
+          return static::find( $id );
     }
 
 }

@@ -35,8 +35,8 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="thumb col-lg-3 col-xs-3" v-for="(p, index) in property_photos" >
-                            <a href="javascript:" @click="gotoPhoto( index )"><img src="" :src="p.url" style="height:72px;width:72px;padding:2px" :style=" current_photo_index==index ? 'border:2px solid #7777FF' : '' "/></a>
+                        <div class="thumb col-lg-3 col-xs-3" v-for="(p, index) in property_photos" :style=" current_photo_index==index ? 'border:2px solid #AAAADD' : '' ">
+                            <a href="javascript:" @click="gotoPhoto( index )"><img src="" :src="p.url" style="height:72px;width:72px;padding:2px" /></a>
                         </div>
                     </div>
                     <br />

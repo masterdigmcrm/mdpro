@@ -1,5 +1,4 @@
-
-<div id="leads_div">
+<div id="leads_div" v-cloak>
     <div class="panel panel-flat vDiv" id="leadList">
         <div class="panel-body">
             <form id="leadsForm">
@@ -66,7 +65,8 @@
                                             <a href="javascript:" v-on:click="createLeadGroup()"><?php echo trans('leads.create lead groups') ?> </a>
                                         </li>
                                         <li>
-                                            <a href="<?php echo Url('leads/groups') ?>"><?php echo trans('leads.view lead groups') ?> </a>
+                                            <!--<a href="<?php echo Url('leads/groups') ?>"><?php echo trans('leads.view lead groups') ?> </a>-->
+                                            <a href="javascript:" @click="openGroupList"><?php echo trans('leads.view lead groups') ?> </a>
                                         </li>
                                     </ul>
                                 </div>
@@ -84,7 +84,7 @@
                             <tr v-for="(lead , index) in leads">
                             <td>
                                 <label>
-                                    <input type="checkbox" class="checkbox-master cb" name="cb[]" value=""  />
+                                    <input type="checkbox" class="checkbox-master cb" name="cb[]" value="" :value="lead.leadid" />
                                     <span></span>
                                 </label>
                             </td>
@@ -140,8 +140,9 @@
     <!------------ Todo Modal --------->
     <?php //echo view('leads.modals.todo')->render(); ?>
     <!------------ Lead Group Modal --------->
-    <?php //echo view('leads.modals.lead_group_create')->render(); ?>
-    <?php //echo view('leads.modals.lead_group_list')->render(); ?>
+    <?php echo view('leads.modals.lead_group_create')->render(); ?>
+    <?php echo view('leads.modals.lead_groups')->render(); ?>
+    <?php echo view('leads.modals.lead_campaigns')->render(); ?>
     <?php //echo view('leads.modals.postcard_send')->render(); ?>
 
 </div>

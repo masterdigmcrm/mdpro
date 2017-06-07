@@ -15,6 +15,25 @@ class UserMap extends Model
         return $this->hasOne( AccountEntity::class, 'userid', 'broker_userid' );
     }
 
+    public static function byUserId( $userid )
+    {
+        return static::where( 'userid' , $userid )->first();
+    }
+
+    public function getParamValue( $value )
+    {
+        if( ! $this->params ){
+            return null;
+        }
+
+        $params = unserialize( $this->params );
+        if( ! isset( $params[ $value ])){
+            return null;
+        }
+
+        return $params[ $value ];
+    }
+
     public function is_manager()
     {
         return $this->broker_userid == $this->userid ? true : false ;

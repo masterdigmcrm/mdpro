@@ -26,6 +26,11 @@ class AccountEntity extends  BaseModel{
         return static::$instance;
     }
 
+    public function byUserId( $user_id )
+    {
+
+    }
+
     public function getParamByKey( $key )
     {
         $params = unserialize( $this->params );
