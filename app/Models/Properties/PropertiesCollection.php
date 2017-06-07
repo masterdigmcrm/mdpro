@@ -17,58 +17,58 @@ class PropertiesCollection extends PropertyEntity{
 
         $fields = [ 'p.*' , 'p.stateid as stateid', 's.status' , 't.type' , 'co.country' , 'st.state' , 'ci.city' ];
 
-        $query = static::from( $this->table.' as p' )
+        $this->query = static::from( $this->table.' as p' )
          ->with( ['photos']);
 
         $account = UserEntity::me()->userMap->account;
         $account_id = $account->brokerid;
 
-        $query->where( 'p.brokerid' , $account_id );
+        $this->query->where( 'p.brokerid' , $account_id );
 
-        $query->leftJoin( 'jos_mdigm_countries as co' , 'p.countryid' , '=' ,'co.countryid' );
-        $query->leftJoin( 'jos_mdigm_states as st' , 'p.stateid' , '=' ,'st.id' );
-        $query->leftJoin( 'jos_mdigm_type as t' , 'p.property_type' , '=' ,'t.typeid' );
-        $query->leftJoin( 'jos_mdigm_cities as ci' , 'p.cityid' , '=' ,'ci.id' );
-        $query->leftJoin( 'jos_mdigm_status as s', function( $join ) use( $account_id ) {
+        $this->query->leftJoin( 'jos_mdigm_countries as co' , 'p.countryid' , '=' ,'co.countryid' );
+        $this->query->leftJoin( 'jos_mdigm_states as st' , 'p.stateid' , '=' ,'st.id' );
+        $this->query->leftJoin( 'jos_mdigm_type as t' , 'p.property_type' , '=' ,'t.typeid' );
+        $this->query->leftJoin( 'jos_mdigm_cities as ci' , 'p.cityid' , '=' ,'ci.id' );
+        $this->query->leftJoin( 'jos_mdigm_status as s', function( $join ) use( $account_id ) {
             $join->on('p.property_status', '=', 's.statusid')
                 ->where('s.brokerid' , $account_id );
         });
 
         if( $r->propertyid ){
-            $query->where( 'p.id' , $r->propertyid );
-            $this->collection =  $query->get( $fields );
+            $this->query->where( 'p.id' , $r->propertyid );
+            $this->collection =  $this->query->get( $fields );
             return $this->vuefyThisCollection();
         }
 
         if( $r->beds ){
-            $query->where( 'beds' , '>=' , $r->beds );
+            $this->query->where( 'beds' , '>=' , $r->beds );
         }
 
         if( $r->baths ){
-            $query->where( 'baths' , '>=' , $r->baths );
+            $this->query->where( 'baths' , '>=' , $r->baths );
         }
 
         $min_price = str_replace( ',' ,'', $r->min_price );
         $max_price = str_replace( ',' ,'', $r->max_price );
 
         if( $min_price && $max_price ){
-            $query->where( 'price' , '>=' , $min_price );
-            $query->where( 'price' , '<=' , $max_price );
+            $this->query->where( 'price' , '>=' , $min_price );
+            $this->query->where( 'price' , '<=' , $max_price );
 
         }elseif( $min_price ){
-            $query->where( 'price' , '>=' , $min_price );
+            $this->query->where( 'price' , '>=' , $min_price );
         }elseif( $max_price ){
-            $query->where( 'price' , '<=' , $max_price );
+            $this->query->where( 'price' , '<=' , $max_price );
         }
 
         if( $r->typeid ){
-            $query->where( 'typeid' , $r->typeid );
+            $this->query->where( 'typeid' , $r->typeid );
         }
 
-        $this->total = $query->count();
-        $query = $this->assignLpo( $query );
+        $this->total = $this->query->count();
+        $this->query = $this->assignLpo( $this->query );
 
-        $this->collection =  $query->get( $fields );
+        $this->collection =  $this->query->get( $fields );
 
         return $this->vuefyThisCollection();
     }

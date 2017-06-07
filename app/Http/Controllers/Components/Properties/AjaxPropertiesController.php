@@ -60,14 +60,19 @@ class AjaxPropertiesController {
         $countries = new Countries();
 
         $account_id = UserEntity::me()->userMap->account->brokerid;
-        $r->request->add([ 'account_id' => $account_id ]);
+        $r->merge([ 'account_id' => $account_id ]);
+
+        $properties = new PropertiesCollection();
+        $account_id = UserEntity::me()->userMap->account->brokerid;
+
 
         return [
             'success' =>true,
+            'properties'        => $properties->getCollection( $r ),
             'property_status'   => $status->getCollection( $r ),
             'property_types'    => $types->getCollection( $r ),
-            'account_id' => $account_id,
-            'countries' => $countries->getCollection( $r )
+            'account_id'        => $account_id,
+            'countries'         => $countries->getCollection( $r )
         ];
     }
 

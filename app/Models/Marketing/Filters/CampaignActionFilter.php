@@ -26,10 +26,6 @@ class CampaignActionFilter extends AbstractFilter{
         $this->query->where( 'a.deleted', "$v" );
     }
 
-    public function isTemplateFilter( $k , $v )
-    {
-        $this->query->where( $k , "$v" );
-    }
     
     public function publishedFilter( $k , $v )
     {

@@ -65,6 +65,7 @@ var pVue = new Vue({
                     vm.property_status = data.property_status;
                     vm.property_types = data.property_types;
                     vm.countries = data.countries;
+                    vm.properties = data.properties;
                 }else{
                     toastr.error( data.message );
                 }
@@ -332,7 +333,7 @@ var pVue = new Vue({
     },
     mounted:function(){
         this.init();
-        this.getProperties();
+        //this.getProperties();
     },
     computed:{
         offsetFrom(){
