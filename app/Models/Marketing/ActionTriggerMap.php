@@ -2,10 +2,11 @@
 
 namespace App\Models\Marketing;
 
-use App\Http\Models\Users\UserEntity;
+
 use App\Http\Models\Users\UserMap;
 use App\Models\BaseModel;
 use App\Models\Marketing\Filters\ActionTriggerMapFilter;
+use App\Models\Users\UserEntity;
 use Carbon\Carbon;
 use Faker\Provider\Base;
 use Illuminate\Database\Eloquent\Model;
@@ -55,7 +56,7 @@ class ActionTriggerMap extends BaseModel{
             $this->exists = true;
         }else{
             $this->actionid     = $r->action->actionid;
-            $this->added_by     = $r->user()->id;
+            $this->added_by     = UserEntity::me()->id;
             $this->date_added   = date( 'Y-m-d H:i:s' );
             $this->date_sending_sched = $this->getDateSendingSched( $r->action );
             $this->date_sent    = "1970-01-01 00:00:00";

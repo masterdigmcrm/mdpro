@@ -6,6 +6,7 @@ use App\Models\Accounts\AccountEntity;
 use App\Models\Activities\TodoCollection;
 use App\Models\Leads\LeadCollection;
 use App\Models\Leads\LeadEntity;
+use App\Models\Leads\LeadGroupCampaignMap;
 use App\Models\Leads\LeadGroupEntity;
 use App\Models\Leads\LeadGroupMap;
 use App\Models\Leads\LeadGroupsCollection;
@@ -59,6 +60,27 @@ class AjaxLeadsController{
 
     public function addLeadGroupsToCampaigns( Request $r )
     {
+        if( !  $r->cbcampaigns ){
+            return [
+                'success' => false,
+                'message' => 'No campaigns selected'
+            ];
+        }
+
+        foreach( $r->cbcampaigns as $c  ){
+            // check duplicates
+            $map =  new LeadGroupCampaignMap;
+            if( $map->isDuplicate( $r->group_id , $c ) ){
+                continue;
+            }
+
+            $map->group_id = $r->group_id;
+            $map->campaign_id = $c;
+            $map->save();
+
+
+        }
+
         return [
             'success' =>true,
             'r' => $r->all()
@@ -82,7 +104,7 @@ class AjaxLeadsController{
         $campaignids = $r->campaignid;
 
         // get all actions of selected campaigns
-        $r->merge([ 'deleted' => 0 , 'is_template' => 0 ]);
+        $r->merge([ 'deleted' => 0 ]);
         $actions = ( new CampaignActionCollection )->getCollection( $r );
 
         $duplicate = 0;
@@ -216,7 +238,7 @@ class AjaxLeadsController{
             ];
         }
 
-        if( ! $r->g ){
+        if( ! $r->group_id ){
             return [
                 'success' => false,
                 'message' => 'No group to add to a lead'
@@ -226,21 +248,76 @@ class AjaxLeadsController{
         $duplicates = 0;
         $added = 0;
 
+        $leadid_arr = [];
+
         foreach( $r->l as $l ){
             // check if lead is aleready associated with the group
-            foreach( $r->g as $g ){
-                $map = (new LeadGroupMap() )->exists( $l , $g );
-                if( ! $map ){
-                    $map = new LeadGroupMap();
-                    $map->leadid = $l;
-                    $map->group_id = $g;
-                    $map->save();
-                    $added++;
-                }else{
-                    $duplicates++;
+            $map = (new LeadGroupMap() )->exists( $l , $r->group_id );
+            if( ! $map ){
+                $map = new LeadGroupMap();
+                $map->leadid = $l;
+                $map->group_id = $r->group_id;
+                $map->save();
+                $added++;
+                $leadid_arr[] = $l;
+            }else{
+                $duplicates++;
+            }
+
+        }
+
+        // add leads to group campaigns
+        if( $r->algc && count( $leadid_arr )){
+
+            // get all campaigns of the group
+            $r->merge( [ 'with_campaign' => true ] );
+            $campaign_map = ( new LeadGroupCampaignMap )->getCollection( $r )->keyBy( 'campaign_id' );
+
+            $campaign_ids = [];
+            $triggers = [];
+
+            if( $campaign_map ){
+                $campaign_ids   = $campaign_map->pluck( 'campaign_id' )->toArray();
+
+                // set up triggers
+                foreach( $campaign_map as $map ){
+                    $std = new \stdClass();
+                    $std->typeid = $map->typeid;
+                    $std->statusid = $map->statusid;
+
+                    $triggers[ $map->campaign_id ] = $std;
+                }
+
+                $leads = LeadCollection::whereIn( 'leadid' , $leadid_arr )->get();
+                // match leads base on campaign triggers
+                foreach( $leads as $l ){
+
+                    $matched_campaigns = [];
+
+                    foreach( $triggers as $k => $t ){
+                        if( ( $t->statusid == 0 || $t->statusid == $l->status ) && ( $t->typeid == 0 || $t->statusid == $l->status  )  ){
+
+                            $actions = $campaign_map[ $k ]->actions;
+                            foreach( $actions as $a ){
+                                if( $a->sending_type == 'field_date' ){
+                                    // skip field dates for now
+                                    continue;
+                                }
+                                $req = new Request();
+                                $req->merge(['leadid' => $l->leadid , 'action' => $a , 'actionid' => $a->actiond ]);
+
+                                ( new ActionTriggerMap )->store( $req );
+                            }
+                        }
+                    }
+
                 }
             }
+
+
+
         }
+
         return [
             'success' => true,
             'success_count' => $added,

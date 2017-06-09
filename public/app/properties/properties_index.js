@@ -59,19 +59,20 @@ var pVue = new Vue({
         },
         init(){
             let vm = this;
+            this.searching = true;
             $.get( '/ajax/properties/init' )
             .done(function( data ){
                 if( data.success){
                     vm.property_status = data.property_status;
                     vm.property_types = data.property_types;
                     vm.countries = data.countries;
-                    vm.properties = data.properties;
                 }else{
                     toastr.error( data.message );
                 }
-            })
-            .error(function( data ){
+                vm.searching = false;
+            }).error(function( data ){
                 toastr.error('Something went wrong');
+                vm.searching = true;
             });
         },
         editProperty(){
@@ -332,8 +333,8 @@ var pVue = new Vue({
 
     },
     mounted:function(){
+        this.getProperties();
         this.init();
-        //this.getProperties();
     },
     computed:{
         offsetFrom(){

@@ -356,6 +356,7 @@ var leadsVue = new Vue({
         },
         addToGroup:function(){
             let vm = this;
+            this.group = {};
             $('.cb:checkbox:checked').each( function(){
                 vm.selected_leads.push( $(this).val() )
             });
@@ -363,7 +364,8 @@ var leadsVue = new Vue({
                 toastr.error( 'You need to select a lead' );
                 return;
             }
-            $('#leadGroupsModal').modal();
+            //$('#leadGroupsModal').modal();
+            $('#addLeadsGroupModal').modal();
             this.populateGroupList();
         },
         saveLeadsToGroups(){
@@ -371,22 +373,33 @@ var leadsVue = new Vue({
             let btn = $( '#altg-btn' );
             let h  = btn.html();
             let selected_groups = [];
-
+            let dg = $( '#dropdown_group_id');
+            if( dg.val() == 0  ){
+                toastr.error( 'Please select a group to add the leads' );
+                return;
+            }
+            let group_id = dg.val();
+            /**
             $('.grp:checkbox:checked').each( function(){
                 selected_groups.push( $(this).val() )
             });
+            **/
 
+            let algc = $('#algc').val();
             btn.prop( 'disabled' , true );
             btn.html( '<i class="fa fa-spin fa-refresh"></i>' );
 
-            $.post( '/ajax/leads/sltg' , { l:this.selected_leads, g: selected_groups, _token:$( "input[name=_token]").val() } )
+            $.post( '/ajax/leads/sltg' , { l:this.selected_leads, group_id: group_id, algc: algc, _token:$( "input[name=_token]").val() } )
             .done( function( data ){
                 if( data.success ){
                     gtext = data.group_count.length > 1 ? 'groups' : 'group';
-                    toastr.success( data.success_count+' leads successfully added to '+data.group_count+' '+gtext );
+                    toastr.success( data.success_count+' leads successfully added to  group' );
+                }else{
+                    toastr.error( data.message );
                 }
                 $('.btn').prop( 'disabled', false );
                 btn.html( h );
+                $('#addLeadsGroupModal').modal( 'toggle' );
             }).error(function(){
                 toastr.error( 'Something went wrong');
                 $('.btn').prop( 'disabled', false );

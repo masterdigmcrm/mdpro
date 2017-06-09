@@ -35,27 +35,18 @@
                         </table>
                     </div>
                     <div class="col-lg-8">
-                        <div class="lead_group_panel" id="members_div">
-                            <div v-show="selected_leads.length" class="alert alert-success">
-                                <div>
-                                    {{ selected_leads.length }} leads are currently selected. You may add those leads to one or more groups by selecting the groups at the left and clicking the Add button below
-                                </div>
-                                <div style="margin-top: 32px">
-                                    <button class="btn btn-primary" id="altg-btn" @click="saveLeadsToGroups"> <i class="fa fa-plus"></i> Add Leads To Groups </button>
-                                </div>
-                            </div>
-                            <div v-show="group.lead_group_id">
-                                <h4><b> Group Members ( {{ group.group_name }} ) </b></h4>
-                                <table class="table">
-                                    <tr v-show="!group_members.length">
-                                        <td> No lead associated with this group</td>
-                                    </tr>
-                                    <tr v-for="m in group_members">
-                                        <td>{{ m.last_name+' '+m.first_name }}</td>
-                                    </tr>
-                                </table>
-                            </div>
+                        <div v-show="group.lead_group_id">
+                            <h4><b> Group Members ( {{ group.group_name }} ) </b></h4>
+                            <table class="table">
+                                <tr v-show="!group_members.length">
+                                    <td> No lead associated with this group</td>
+                                </tr>
+                                <tr v-for="m in group_members">
+                                    <td>{{ m.last_name+' '+m.first_name }}</td>
+                                </tr>
+                            </table>
                         </div>
+
                         <div class="lead_group_panel hide" id="lead_campaign_div">
                             <div class="row">
                                 <div class="pull-right">
@@ -81,6 +72,44 @@
 
             <div>
 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="addLeadsGroupModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"> <b>Add leads to group</b></h4>
+            </div>
+            <div class="modal-body">
+                <div class="lead_group_panel" id="members_div">
+                    <div v-show="selected_leads.length" class="alert alert-success">
+                        <div>
+                            <div>
+                            {{ selected_leads.length }} leads are currently selected
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <select id="dropdown_group_id" name="dropdown_group_id" class="form-control">
+                                    <option value="0"> Select a group  </option>
+                                    <option value="" v-for="g in lead_groups" :value="g.lead_group_id"> {{ g.group_name}} </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="checkbox" name="algc" id="algc" value="1" /> Add the leads to group marketing campaigns
+                        </div>
+                        <div style="margin-top: 32px">
+                            <button class="btn btn-primary" id="altg-btn" @click="saveLeadsToGroups">
+                                <i class="fa fa-plus"></i> Add Leads To Group
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>

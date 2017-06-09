@@ -15,7 +15,12 @@ class LeadGroupMap extends BaseModel{
 
     protected $fillable = [ 'group_id' , 'leadid' ];
 
-
+    /**
+     * get model collection
+     *
+     * @param Request $r
+     * @return array
+     */
     public function getCollection( Request $r )
     {
         $this->setLpo( $r );
@@ -35,6 +40,12 @@ class LeadGroupMap extends BaseModel{
         return $this->vuefyThisCollection();
     }
 
+    /**
+     * Checks if map exists base on lead_id and group_id
+     * @param $lead_id
+     * @param $group_id
+     * @return mixed
+     */
     public function exists( $lead_id , $group_id )
     {
         $map = static::where( 'leadid' , $lead_id )
@@ -43,5 +54,6 @@ class LeadGroupMap extends BaseModel{
 
         return $map;
     }
+
 
 }

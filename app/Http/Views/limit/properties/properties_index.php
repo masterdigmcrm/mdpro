@@ -21,7 +21,7 @@
                 </div>
                 <div class="panel-body">
                     <table class="table">
-                        <tr v-show=" ! properties.length">
+                        <tr v-show=" ! properties.length && ! searching">
                             <td>
                                 <div v-show="searching"><i class="fa fa-spin fa-refresh"></i> Searching...</div>
                                 <div v-show="! searching"> No property found </div>
@@ -45,6 +45,9 @@
                             </td>
                         </tr>
                     </table>
+                    <div v-show="searching">
+                        <i class="fa fa-refresh fa-spin"></i> Loading...
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,11 +62,9 @@
                     <i class="icon-calendar font-blue"></i>
                     <span class="caption-subject theme-font bold uppercase">Search</span>
                 </div>
-
             </div>
             <div class="panel-body">
                 <?php echo view( 'properties.partials.partial_search') ?>
-
             </div>
         </div>
     </div>

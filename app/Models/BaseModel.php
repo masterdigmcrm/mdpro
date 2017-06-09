@@ -39,9 +39,11 @@ class BaseModel extends Model
 
     public function assignLpo()
     {
+
         $this->query->limit( $this->limit );
         $this->query->offset( $this->offset );
         $this->query->orderBy( $this->order_by , $this->order_direction );
+
         return $this->query;
     }
 
