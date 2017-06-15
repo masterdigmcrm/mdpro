@@ -73,57 +73,72 @@
                         </div>
                     </div>
                     <div class="row" v-show="postcard.postcard_id">
-                        <div class="col-lg-6">
-                            <div class="panel panel-white">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-lg-4">
-                                            <h4><b>Front</b></h4>
-                                        </div>
-                                        <div class="col-lg-8" style="text-align: right">
-                                            <label class="btn btn-success btn-file">
-                                                <i class="fa fa-upload"></i> Upload Front Design
-                                                <input style="display: none; color: transparent;" id="frontUpload" type="file" name="postcard_front" class="file-input"
-                                                       data-url="<?php echo Url('/ajax/postcards/upload/front') ?>">
-                                            </label>
-                                            <div v-show="progress_front">
-                                                <div class="bar" style="height: 8px;background-color: green; margin-top:12px"> </span> </div>
+                        <div class="row">
+                            <div>
+                                <div class="alert alert-info">
+                                    When using PNGs or JPEGs for postcards, we require a minimum of 300 dpi.
+                                    The dpi is calculated as (width of image in pixels) / (width of product in inches) and
+                                    (length of image in pixels) / (length of product in inches).
+                                    Right now we support on images of sizes 1275px x 1875px image used to create
+                                    a 4.25" x 6.25" postcard with a dpi of 300.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="panel panel-white">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <h4><b>Front</b></h4>
+                                            </div>
+                                            <div class="col-lg-8" style="text-align: right">
+                                                <label class="btn btn-success btn-file">
+                                                    <i class="fa fa-upload"></i> Upload Front Design
+                                                    <input style="display: none; color: transparent;" id="frontUpload" type="file" name="postcard_front" class="file-input"
+                                                           data-url="<?php echo Url('/ajax/postcards/upload/front') ?>">
+                                                </label>
+                                                <div v-show="progress_front">
+                                                    <div class="bar" style="height: 8px;background-color: green; margin-top:12px"> </span> </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <img src="" class="img-responsive" :src="frontPostcardSrc" />
+                                    <div class="panel-body">
+
+                                        <div class="row">
+                                            <div class="col-lg-12">
+
+                                                <img src="" class="img-responsive" :src="frontPostcardSrc" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="panel panel-white">
-                                <div class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-lg-4">
-                                            <h4><b>Back</b></h4>
-                                        </div>
-                                        <div class="col-lg-8" style="text-align: right">
-                                            <label class="btn btn-success btn-file">
-                                                <i class="fa fa-upload"></i> Upload Back Design
-                                                <input style="display: none; color: transparent;" id="backUpload" type="file" name="postcard_back" class="file-input"
-                                                       data-url="<?php echo Url('/ajax/postcards/upload/back') ?>">
-                                            </label>
-                                            <div v-show="progress_back">
-                                                <div class="bar_back" style="height: 8px;background-color: green; margin-top:12px"> </span> </div>
+                            <div class="col-lg-6">
+                                <div class="panel panel-white">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <h4><b>Back</b></h4>
+                                            </div>
+                                            <div class="col-lg-8" style="text-align: right">
+                                                <label class="btn btn-success btn-file">
+                                                    <i class="fa fa-upload"></i> Upload Back Design
+                                                    <input style="display: none; color: transparent;" id="backUpload" type="file" name="postcard_back" class="file-input"
+                                                           data-url="<?php echo Url('/ajax/postcards/upload/back') ?>">
+                                                </label>
+                                                <div v-show="progress_back">
+                                                    <div class="bar_back" style="height: 8px;background-color: green; margin-top:12px"> </span> </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <img src="" class="img-responsive" :src="backPostcardSrc" />
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <img src="" class="img-responsive" :src="backPostcardSrc" />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

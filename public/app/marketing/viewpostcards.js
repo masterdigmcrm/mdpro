@@ -42,7 +42,7 @@ var pVue = new Vue({
             .done(function( data ){
                 if( data.success){
                     vm.postcard = data.postcard;
-                    toastr.success( 'Postcard successfully saved' );
+                    toastr.success( 'Postcard successfully saved. You may now upload the front and back images of the postcard' );
 
                 }else{
                     toastr.error( data.message );
