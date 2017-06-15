@@ -17,7 +17,7 @@ class CampaignActionEntity extends BaseModel{
 
     protected $fillable = [ 'campaignid', 'ownerid', 'subject' , 'message', 'message_format' ,
         'sending_delay', 'sending_specific_datetime', 'sending_type', 'sending_field',
-        'is_public', 'is_template' , 'template_name' , 'published' , 'templateid' , 'attachment',
+        'is_public', 'published' , 'templateid' , 'attachment',
         'auto_cancel','action_typeid'
     ];
 
