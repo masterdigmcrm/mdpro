@@ -10,6 +10,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="col-lg-3">
+                        <div v-show="loading_campaigns"> <i class="fa fa-spin fa-refresh"></i> &nbsp;Loading Campaigns... </div>
                         <table class="table">
                             <tr v-for="c in campaigns">
                                 <td> <a href="javascript:" @click="campaignSelected( c.campaignid )"> <b>{{ c.campaign_name }} </b> </a> </td>
@@ -37,7 +38,6 @@
                                 </div>
                                 <div class="panel-body">
                                     <div>
-                                        <div></div>
                                         <table class="table table-striped">
                                             <tr v-for="c in campaignActions" v-show="campaignActions.length">
                                                 <td>{{ c.subject }}</td>
@@ -46,11 +46,16 @@
                                                         <li class="dropdown">
                                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-menu7"></i></a>
                                                             <ul class="dropdown-menu dropdown-menu-right">
-                                                                <li><a href="javascript:"><i class="icon-file-text2"></i> Edit Action</a></li>
-                                                                <li><a href="javascript:"><i class="icon-file-locked"></i> Delete Action</a></li>
+                                                                <!--<li><a href="javascript:"><i class="icon-file-text2"></i> Edit Action</a></li>-->
+                                                                <li>
+                                                                    <a href="javascript:" @click="deleteAction(c.actionid)"><i class="icon-delete"></i> Delete Action</a>
+                                                                </li>
                                                             </ul>
                                                         </li>
                                                     </ul>
+
+
+
                                                 </td>
                                             </tr>
                                             <tr v-show="!campaignActions.length">

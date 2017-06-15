@@ -65,18 +65,22 @@ if( \Request::segment(2) == 'leads'){
         Route::post( 'delete/group' , 'AjaxLeadsController@deleteGroup' );
 
     });
+
+    return;
 }
 
 if( in_array( \Request::segment(2) , [ 'marketing', 'campaign' , 'campaigns'] ) ){
     Route::group( [ 'prefix' => 'campaign', 'namespace' => 'Components\Marketing' ], function(){
         Route::post( '', 'MarketingAjaxController@saveCampaign' );
         Route::post( 'action', 'MarketingAjaxController@saveAction' );
+        Route::delete( 'action', 'MarketingAjaxController@deleteAction' );
         Route::get( 'init', 'MarketingAjaxController@init' );
     });
 
     Route::group( [ 'prefix' => 'marketing', 'namespace' => 'Components\Marketing' ], function(){
         Route::get( 'postcards', 'MarketingAjaxController@getPostcards' );
     });
+
 
     return;
 }

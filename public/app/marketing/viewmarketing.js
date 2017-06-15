@@ -10,11 +10,16 @@ var mVue = new Vue({
         action_sending_delay:0,
         postcards:[],
         postcard:{},
-        postcard_id:0
+        postcard_id:0,
+
+        loading_campaigns: false
+
     },
     methods:{
         init(){
             let vm = this;
+            vm.loading_campaigns = true;
+
             $.get('/ajax/campaign/init')
             .done(function( data ){
                 if( data.success){
@@ -22,9 +27,11 @@ var mVue = new Vue({
                 }else{
                     toastr.error( data.message );
                 }
+                vm.loading_campaigns = false;
             })
             .error(function( data ){
                 toastr.error('Something went wrong');
+                vm.loading_campaigns = false;
             });
         },
         openEditDiv(){
@@ -104,6 +111,32 @@ var mVue = new Vue({
                 btn.html( h );
             });
         },
+        deleteAction( actionid ){
+            if( ! confirm( 'Are you sure you want to delete this action?' ) ){
+                return ;
+            }
+            let vm  = this;
+            $.ajax({ url: '/ajax/campaign/action', type: 'DELETE',dataType:'json',
+                data:{ actionid:actionid, _token:$('input[name="_token"]').val() },
+                success: function( data ) {
+                    if( data.success ){
+
+                        for( i=0; i < vm.campaign.actions.length; i++ ){
+                            d = vm.campaign.actions[i];
+                            if( d.actionid == actionid ){
+                                d.deleted = 1;
+                                Vue.set( vm.campaign.actions , i , d );
+                                toastr.success( 'Action successfully deleted' );
+                            }
+                        }
+                    }else{
+                        toastr.error( data.message );
+                    }
+                }
+            }).fail(function(){
+
+            })
+        },
         actionDelaySelected( e ){
             if( $(e.target).val() == -1 ){
                 this.action_sending_delay = -1;
@@ -121,7 +154,6 @@ var mVue = new Vue({
 
         },
         campaignActions(){
-
             return $.grep( this.campaign.actions, function( a ){
                 return a.deleted == 0;
             });

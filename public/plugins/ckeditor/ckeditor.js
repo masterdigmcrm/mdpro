@@ -1040,6 +1040,17 @@ init:function(a){
     b.push(["[my_company_name]","My Company Name","Company Name"]);
     b.push(["[my_company_logo]","My Company Logo","Company Logo"]);
     b.push(["[my_company_office_name]","My Office Name","Office Name"]);
+    b.push(["[my_city]","My City",""]);
+    b.push(["[my_state]","My State",""]);
+    b.push(["[my_zip]","My Zip",""]);
+    b.push(["[my_email]","My Email",""]);
+    b.push(["[my_home_phone]","My Home Phone",""]);
+    b.push(["[my_work_phone]","My Work Phone",""]);
+    b.push(["[my_mobile_phone]","My Mobile Phone",""]);
+    b.push(["[my_picture]","My Picture",""]);
+    b.push(["[my_signature]","My Signature",""]);
+    b.push(["[lead_firstname]","Lead First Name",""]);
+    b.push(["[lead_lastname]","Lead Last Name",""]);
 
     a.ui.addRichCombo("strinsert",{label:"Insert Content",title:"Insert Content",voiceLabel:"Insert Content",className:"cke_format",multiSelect:!1,panel:{css:[a.config.contentsCss,
 CKEDITOR.skin.getPath("editor")],voiceLabel:a.lang.panelVoiceLabel},init:function(){this.startGroup("Insert Content");for(var a in b)this.add(b[a][0],b[a][1],b[a][2])},onClick:function(b){a.focus();a.fire("saveSnapshot");a.insertHtml(b);a.fire("saveSnapshot")}})}});(function(){function m(a,d){CKEDITOR.tools.extend(this,{editor:a,editable:a.editable(),doc:a.document,win:a.window},d,!0);this.inline=this.editable.isInline();this.inline||(this.frame=this.win.getFrame());this.target=this[this.inline?"editable":"doc"]}function n(a,d){CKEDITOR.tools.extend(this,d,{editor:a},!0)}function p(a,d){var b=a.editable();CKEDITOR.tools.extend(this,{editor:a,editable:b,inline:b.isInline(),doc:a.document,win:a.window,container:CKEDITOR.document.getBody(),winTop:CKEDITOR.document.getWindow()},

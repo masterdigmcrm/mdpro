@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Components\Marketing;
 
 
 use App\Models\Accounts\AccountEntity;
+use App\Models\Marketing\ActionTriggerMap;
 use App\Models\Marketing\CampaignActionEntity;
 use App\Models\Marketing\CampaignCollection;
 use App\Models\Marketing\CampaignEntity;
@@ -58,6 +59,37 @@ class MarketingAjaxController extends Controller
 
         return [
             'success' =>true,
+            'action' => $action
+        ];
+    }
+    
+    public function deleteAction( Request $r )
+    {
+        $action = ( new CampaignActionEntity())->f( $r->actionid );
+
+        if( ! $action ){
+          return [
+              'success' =>false,
+              'message' => 'Campaign action not found'
+          ];
+        }
+
+        if( $action->ownerid != $r->user()->id ){
+            return [
+                'success' => false,
+                'message' => 'You are not allowed to delete action'
+            ];
+        }
+
+        $action->deleted = 1;
+        $action->save();
+
+        // cancel all emails on queue for this action
+        $updated = ( new ActionTriggerMap )->cancelByActionId( $r->actionid );
+
+        return [
+            'success' =>true,
+            'updated' => $updated,
             'action' => $action
         ];
     }

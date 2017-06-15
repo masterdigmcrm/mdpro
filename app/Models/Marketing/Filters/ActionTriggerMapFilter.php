@@ -21,4 +21,11 @@ class ActionTriggerMapFilter extends AbstractFilter{
     {
         $this->query->where( 'action_typeid' , $v );
     }
+    
+    public function actionIdFilter( $k , $v )
+    {
+        $this->query->where( 'm.actionid' , $v );
+    }
+
+
 }

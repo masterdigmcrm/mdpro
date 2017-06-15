@@ -90,10 +90,34 @@ class ActionTriggerMap extends BaseModel{
         // apply filters
         $this->query = ( new ActionTriggerMapFilter( $this->query ) )->applyFilter( $r->all() );
 
-        $this->total = $this->query->count();
+        // if need to return total entries
+        if( $r->with_total ){
+            $this->total = $this->query->count();
+        }
 
+        // return the query builder for further manipulation
+        if( $r->return_query_builder ){
+            return $this->query;
+        }
+
+        // set the limits and offset of the query
         $this->assignLpo();
-        return $this->vuefyThisCollection();
+
+
+        return $this->query->get( $this->fields );
+    }
+
+    /**
+     *
+     * @param $actionid
+     * @return mixed
+     */
+    public function cancelByActionId( $actionid )
+    {
+        $r = new Request();
+        $r->merge( ['actionid' => $actionid, 'status'=> 'onqueue',  'return_query_builder' => true ] );
+
+        return $this->getCollection( $r )->update( [ 'm.status' => 'cancelled'] );
     }
 
     /**
