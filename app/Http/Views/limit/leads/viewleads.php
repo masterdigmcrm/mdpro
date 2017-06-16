@@ -37,7 +37,6 @@
                                 </a>
                                 <div class="btn-group pull-right">
                                     <a href="javascript:" class="btn btn-primary btn-sm add-new" @click="editlead( 0 )"> <i class="fa fa-plus"></i> <?php echo trans('leads.add new') ?> </a>
-                                    
 
                                     <button type="button" class="btn btn-sm btn-default btn-fit-height dropdown-toggle"
                                             data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
@@ -90,28 +89,30 @@
                             </td>
                             <td>
                                 <div class="btn-group pull-right">
-                                    <button type="button" class="btn btn-fit-height grey-salt dropdown-toggle"
-                                            data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
-                                        <i class="fa fa-angle-down"></i>
-                                    </button>
-                                    <ul class="dropdown-menu pull-right" role="menu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-menu7"></i></a>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <!--<li><a href="javascript:"><i class="icon-file-text2"></i> Edit Action</a></li>-->
                                         <li>
-                                            <a href="#" class="lead-summary" v-on:click="leadsummary( index, lead.leadid)"> <?php echo trans('leads.summary') ?> </a>
+                                            <a href="#" class="lead-summary" v-on:click="leadsummary( index, lead.leadid)"> <i class="icon-magazine"></i> <?php echo trans('leads.summary') ?> </a>
                                         </li>
                                         <li>
-                                            <a href="#" class="lead-delete" @click="deletelead( lead.leadid )"> <?php echo trans('leads.delete') ?> </a>
+                                             <a href="#" class="lead-delete" @click="deletelead( lead.leadid )"> <i class="icon-cross2 text-danger"></i> Delete </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:" class="add-note"  v-on:click="editlead( lead.leadid )"><?php echo trans('leads.edit lead') ?> </a>
+                                            <a href="javascript:" class="add-note"  v-on:click="editlead( lead.leadid )">
+                                                <i class="icon-pencil3"></i> <?php echo trans('leads.edit lead') ?>
+                                            </a>
                                         </li>
                                         <li>
-                                            <a href="javascript:" class="add-note"  v-on:click="editnote(-1 , lead.leadid)"> <?php echo trans('leads.add notes') ?> </a>
+                                            <a href="javascript:" class="add-note"  v-on:click="editnote(-1 , lead.leadid)">
+                                                <i class="icon-pencil7"></i> <?php echo trans('leads.add notes') ?>
+                                            </a>
                                         </li>
 
                                         <li class="divider">
                                         </li>
                                         <li>
-                                            <a href="javascript:" v-on:click="call( -1 , lead.leadid)"><?php echo trans('leads.call') ?> </a>
+                                            <a href="javascript:" v-on:click="call( -1 , lead.leadid)"> <i class="icon-phone-plus2"></i> <?php echo trans('leads.call') ?> </a>
                                         </li>
                                     </ul>
                                 </div>
