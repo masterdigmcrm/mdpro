@@ -39,7 +39,7 @@
                                 <div class="panel-body">
                                     <div>
                                         <table class="table table-striped">
-                                            <tr v-for="c in campaignActions" v-show="campaignActions.length">
+                                            <tr v-for="c in campaign.actions" v-show="campaign.actions.length">
                                                 <td>{{ c.subject }}</td>
                                                 <td>
                                                     <ul class="icons-list">
@@ -53,12 +53,9 @@
                                                             </ul>
                                                         </li>
                                                     </ul>
-
-
-
                                                 </td>
                                             </tr>
-                                            <tr v-show="!campaignActions.length">
+                                            <tr v-show="!campaign.actions.length">
                                                 <td colspan="2"> No action found </td>
                                             </tr>
                                         </table>

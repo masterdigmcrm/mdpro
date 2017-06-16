@@ -12,7 +12,8 @@ var mVue = new Vue({
         postcard:{},
         postcard_id:0,
 
-        loading_campaigns: false
+        loading_campaigns: false,
+        loading_postcards: false
 
     },
     methods:{
@@ -58,6 +59,8 @@ var mVue = new Vue({
         },
         getPostcards(){
             let vm = this;
+            vm.loading_postcards = true;
+
             $.get( '/ajax/marketing/postcards' )
             .done( function( data ){
                 if( data.success){
@@ -65,15 +68,15 @@ var mVue = new Vue({
                 }else{
                     toastr.error( data.message );
                 }
+                vm.loading_postcards = false;
             }).error(function( data ){
                 toastr.error('Something went wrong');
+                vm.loading_postcards = false;
             });
         },
         addAction(){
-
             let vm = this;
             $('#editActionModal').modal();
-
         },
         saveAction( e ){
             let vm = this;
@@ -97,8 +100,9 @@ var mVue = new Vue({
             $.post( '/ajax/campaign/action' , $('#actionForm').serialize() )
             .done(function( data ){
                 if( data.success ){
-                    vm.actions.push( data.action );
+                    vm.campaign.actions.push( data.action );
                     toastr.success( 'Action successfully saved' );
+                    $('#editActionModal').modal( 'toggle' );
                 }else{
                     toastr.error( data.message );
                 }
@@ -125,8 +129,20 @@ var mVue = new Vue({
                             d = vm.campaign.actions[i];
                             if( d.actionid == actionid ){
                                 d.deleted = 1;
-                                Vue.set( vm.campaign.actions , i , d );
+                                vm.campaign.actions.splice( i , 1 );
                                 toastr.success( 'Action successfully deleted' );
+                            }
+                        }
+                        
+                        for( i=0; i < vm.campaigns.length; i++ ){
+                            let c = vm.campaigns[i];
+                            if( c.campaignid == vm.campaignid ){
+                                for( j=0; j < c.actions.length; j++ ){
+                                    let act = c.actions[ j ];
+                                    if( act.actionid == actionid ){
+                                        vm.campaigns[i].actions.splice( j, 1 );
+                                    }
+                                }
                             }
                         }
                     }else{
@@ -147,16 +163,16 @@ var mVue = new Vue({
             if( this.postcards.length == 0 ){
                 this.getPostcards();
             }
-        }
-    },
-    computed:{
-        sortedCampaigns(){
-
         },
         campaignActions(){
             return $.grep( this.campaign.actions, function( a ){
                 return a.deleted == 0;
             });
+        }
+    },
+    computed:{
+        sortedCampaigns(){
+
         }
     },
     mounted:function(){

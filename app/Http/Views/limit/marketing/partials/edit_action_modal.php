@@ -133,6 +133,12 @@
                                 </td>
                             </tr>
                         </table>
+                        <div v-show=" ! loading_postcards && ! postcards.length ">
+                            No postcard found
+                        </div>
+                        <div v-show="loading_postcards">
+                            <i class="icon-spinner2 spinner"></i> Loading postcards
+                        </div>
                     </div>
                 </div>
                 <?php echo csrf_field() ?>
