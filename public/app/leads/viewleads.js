@@ -28,7 +28,9 @@ var leadsVue = new Vue({
         contact:{facebook:false,twitter:false,pinterest:false,linkedin:false,googleplus:false,youtube:false},
         states:[],
         cities:[],
-        countries:[]
+        countries:[],
+
+        loading_members : false
     },
     mounted:function(){
         $('#cb-toggle').prop('checked', false);
@@ -240,6 +242,9 @@ var leadsVue = new Vue({
                 return g.lead_group_id == gid;
             })[0];
 
+            vm.loading_members = true;
+            vm.group_members = [];
+
             $.get('/ajax/leads/ggm' , {gid:gid})
             .done(function( data ){
                 if( data.success){
@@ -247,9 +252,11 @@ var leadsVue = new Vue({
                 }else{
                     toastr.error( data.message );
                 }
+                vm.loading_members = false;
             })
             .error(function( data ){
                 toastr.error('Something went wrong');
+                vm.loading_members = false;
             });
         },
 

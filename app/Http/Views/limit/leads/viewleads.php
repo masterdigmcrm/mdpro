@@ -46,9 +46,11 @@
                                         <li>
                                             With Selected
                                         </li>
+                                        <!--
                                         <li>
                                             <a href="javascript:" class="add-postcard"  v-on:click="selectPostcard"><?php echo trans('leads.send postcard') ?></a>
                                         </li>
+                                        -->
                                         <li>
                                             <a href="javascript:" class="add-bucket"  v-on:click="addToGroup()"><?php echo trans('leads.add to group') ?></a>
                                         </li>

@@ -11,7 +11,7 @@
                     <div class="col-lg-4">
                         <div>
                             <div class="pull-right">
-                                <i class="fa fa-envelope-o"></i>
+                                <!--<i class="fa fa-envelope-o"></i>-->
                             </div>
                         </div>
                         <table class="table">
@@ -38,13 +38,17 @@
                         <div v-show="group.lead_group_id">
                             <h4><b> Group Members ( {{ group.group_name }} ) </b></h4>
                             <table class="table">
-                                <tr v-show="!group_members.length">
+                                <tr v-show="!group_members.length && !loading_members">
                                     <td> No lead associated with this group</td>
                                 </tr>
                                 <tr v-for="m in group_members">
                                     <td>{{ m.last_name+' '+m.first_name }}</td>
                                 </tr>
                             </table>
+                            <div v-show="loading_members">
+                                <hr />
+                                <i class="icon-spinner2 spinner"></i> Loading Members
+                            </div>
                         </div>
 
                         <div class="lead_group_panel hide" id="lead_campaign_div">
