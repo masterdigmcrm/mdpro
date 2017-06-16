@@ -25,6 +25,7 @@ class MarketingAjaxController extends Controller
     {
         $campaigns = new CampaignCollection();
         $r->merge([ 'ownerid' => $r->user()->id , 'with_actions' => true ]);
+
         return [
             'success' =>true,
             'campaigns' => $campaigns->getCollection( $r )

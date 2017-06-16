@@ -74,8 +74,11 @@
                     </div>
                     <div class="row" v-show="postcard.postcard_id">
                         <div class="row">
-                            <div>
-                                <div class="alert alert-info">
+                            <div class="col-lg-12" style="text-align:right">
+                                 <i class="fa fa-question"></i> Tip
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="alert alert-info hide" id="p_info">
                                     When using PNGs or JPEGs for postcards, we require a minimum of 300 dpi.
                                     The dpi is calculated as (width of image in pixels) / (width of product in inches) and
                                     (length of image in pixels) / (length of product in inches).
@@ -108,7 +111,6 @@
 
                                         <div class="row">
                                             <div class="col-lg-12">
-
                                                 <img src="" class="img-responsive" :src="frontPostcardSrc" />
                                             </div>
                                         </div>

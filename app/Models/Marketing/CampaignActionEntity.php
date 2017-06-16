@@ -48,7 +48,7 @@ class CampaignActionEntity extends BaseModel{
             $this->sending_specific_datetime = $this->sending_delay == -1 ? $r->send_year.'-'.$r->send_month.'-'.$r->send_day.' 00:00:00' : '1990-01-01 00:00:00';
             $this->date_created     = date( 'Y-m-d H:i:s' );
             $this->params           =  ' ';
-            $this->template_name    = $this->template_name ? $this->template_name : ' ';
+            //$this->template_name    = $this->template_name ? $this->template_name : ' ';
             $this->ownerid          = $r->user()->id;
         }
 

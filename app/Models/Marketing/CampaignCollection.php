@@ -19,8 +19,8 @@ class CampaignCollection extends CampaignEntity{
         $this->fields = [ 'a.*' ];
 
         $this->query = static::from( $this->table.' as a' )
-            ->where( 'published' , '1' )
-            ->where( 'deleted', '0' );
+            ->whereRaw( "published = '1' " )
+            ->whereRaw( "deleted = '0' " );
 
         $this->query->join( 'jos_mdigm_marketing_triggers as t', 't.campaignid' , '=', 'a.campaignid'  );
 
@@ -49,7 +49,9 @@ class CampaignCollection extends CampaignEntity{
             $this->query->where( 'ownerid' , $user_id );
         }
 
-        $this->total = $this->query->count();
+        if( $r->with_total ){
+            $this->total = $this->query->count();
+        }
 
         $this->assignLpo();
         return $this->vuefyThisCollection();

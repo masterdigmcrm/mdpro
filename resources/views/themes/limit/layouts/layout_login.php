@@ -17,15 +17,14 @@
     <!-- /global stylesheets -->
 
     <!-- Core JS files -->
-    <script type="text/javascript" src="/themes/limit/js/plugins/loaders/pace.min.js"></script>
-    <script type="text/javascript" src="/themes/limit/js/core/libraries/jquery.min.js"></script>
-    <script type="text/javascript" src="/themes/limit/js/core/libraries/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/themes/limit/js/plugins/loaders/blockui.min.js"></script>
+
+    <script type="text/javascript" src="/plugins/jquery/jquery.min.js"></script>
+    <!--<script type="text/javascript" src="/themes/limit/js/core/libraries/bootstrap.min.js"></script>-->
+
     <!-- /core JS files -->
 
-
     <!-- Theme JS files -->
-    <script type="text/javascript" src="/themes/limit/js/core/app.js"></script>
+    <!--<script type="text/javascript" src="/themes/limit/js/core/app.js"></script>-->
     <!-- /theme JS files -->
 
 </head>
@@ -84,7 +83,7 @@
                         </div>
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-block">Sign in <i class="icon-circle-right2 position-right"></i></button>
+                            <button type="submit" id="sbtn" class="btn btn-primary btn-block" >Sign in <i class="icon-circle-right2 position-right"></i></button>
                         </div>
 
                         <div class="text-center">
@@ -105,7 +104,10 @@
 <!-- /page container -->
 <script>
     $('#sForm').submit(function(){
-        alert('submit')
+        let btn = $('#sbtn');
+        let h = btn.html();
+
+        btn.html( '<i class="icon-spinner2 spinner"></i>' );
     })
 </script>
 </body>
