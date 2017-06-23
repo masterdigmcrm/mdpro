@@ -1035,8 +1035,8 @@ CKEDITOR.config.wsc_customDictionaryIds||"";a.config.wsc_userDictionaryName=a.co
 click:function(a){var b=a.elementMode==CKEDITOR.ELEMENT_MODE_INLINE?a.container.getText():a.document.getBody().getText();(b=b.replace(/\s/g,""))?a.execCommand("checkspell"):alert("Nothing to check!")},toolbar:"spellchecker,10"});CKEDITOR.dialog.add("checkspell",this.path+(CKEDITOR.env.ie&&7>=CKEDITOR.env.version?"dialogs/wsc_ie.js":window.postMessage?"dialogs/wsc.js":"dialogs/wsc_ie.js"))}});CKEDITOR.plugins.add("strinsert",{requires:["richcombo"],
 init:function(a){
     var b=[];
-    b.push(["[my_first_name]","My First Name","My First Name"]);
-    b.push(["[my_last_name]","My Last Name","Last Name"]);
+    b.push(["[my_firstname]","My First Name","My First Name"]);
+    b.push(["[my_lastname]","My Last Name","Last Name"]);
     b.push(["[my_company_name]","My Company Name","Company Name"]);
     b.push(["[my_company_logo]","My Company Logo","Company Logo"]);
     b.push(["[my_company_office_name]","My Office Name","Office Name"]);

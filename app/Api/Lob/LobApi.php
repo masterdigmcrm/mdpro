@@ -65,4 +65,20 @@ class LobApi{
 
         return $postcard;
     }
+
+    public function sendMarketingLetters( $message,  $to_address , $from_address , $options = [] )
+    {
+
+        $to_address     = $this->lob->addresses()->create( $to_address );
+        $from_address   = $this->lob->addresses()->create( $from_address );
+
+        $letter = $this->lob->letters()->create( array(
+            'to'            => $to_address['id'],
+            'from'          => $from_address['id'],
+            'color'         =>	false,
+            'file'          => $message,
+        ));
+
+        return $letter;
+    }
 }

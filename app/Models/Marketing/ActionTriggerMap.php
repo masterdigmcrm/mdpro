@@ -19,7 +19,7 @@ class ActionTriggerMap extends BaseModel{
 
     public $timestamps = false;
 
-    protected $fillable = [ 'leadid' , ''  ];
+    protected $fillable = [ 'leadid'   ];
 
     /***
      * Store an action trigger map
@@ -88,7 +88,8 @@ class ActionTriggerMap extends BaseModel{
         $this->query->join( 'jos_mdigm_leads as l', 'l.leadid' , '=', 'm.leadid'  );
 
         // apply filters
-        $this->query = ( new ActionTriggerMapFilter( $this->query ) )->applyFilter( $r->all() );
+        $this->query = ( new ActionTriggerMapFilter( $this->query ) )
+            ->applyFilter( $r->all() );
 
         // if need to return total entries
         if( $r->with_total ){
@@ -143,4 +144,6 @@ class ActionTriggerMap extends BaseModel{
         }
 
     }
+
+
 }

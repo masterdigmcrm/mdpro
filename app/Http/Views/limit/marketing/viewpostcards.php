@@ -102,7 +102,7 @@
                                                            data-url="<?php echo Url('/ajax/postcards/upload/front') ?>">
                                                 </label>
                                                 <div v-show="progress_front">
-                                                    <div class="bar" style="height: 8px;background-color: green; margin-top:12px"> </span> </div>
+                                                    <div class="bar" style="height: 8px;background-color: green; margin-top:12px"> </div>
                                                 </div>
                                             </div>
                                         </div>

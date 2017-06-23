@@ -3,30 +3,30 @@
 namespace App\Console\Commands;
 
 use App\Api\Lob\LobApi;
-use App\Models\Accounts\AccountEntity;
 use App\Models\Locations\States;
 use App\Models\Marketing\ActionTriggerMap;
 use App\Models\Marketing\ActionTriggerMapMessage;
-use App\Models\Postcards\PostcardEntity;
+use App\Models\letters\letterEntity;
+use App\Models\Marketing\CampaignActionEntity;
 use App\Models\Users\UserMap;
 use Illuminate\Console\Command;
 use Illuminate\Http\Request;
 
-class SendPostcards extends Command
+class SendLetters extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'postcards:send';
+    protected $signature = 'letters:send';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Send marketing campaign postcards';
+    protected $description = 'Send marketing campaign letters';
 
     protected $error_message;
     /**
@@ -47,16 +47,16 @@ class SendPostcards extends Command
     public function handle()
     {
         $r = new Request();
-        $r->merge( [ 'action_typeid' => 6 , 'status' => 'onqueue'  ] );
+        $r->merge( [ 'action_typeid' => 3 , 'status' => 'onqueue' , 'limit' => 1  ] );
         $collection = ActionTriggerMap::factory()->getCollection( $r );
-
+        //dd( $collection );
         $user_maps = [];
 
-        foreach( $collection as $postcard_triggers ){
+        foreach( $collection as $letter_triggers ){
 
             // get user LOB API key
             // user is the agent/maanger who is the owner of the lead
-            $userid = $postcard_triggers->assigned_to ? $postcard_triggers->assigned_to : $postcard_triggers->ownerid;
+            $userid = $letter_triggers->assigned_to ? $letter_triggers->assigned_to : $letter_triggers->ownerid;
 
             if( isset( $user_maps[$userid] ) ){
                 $user_map = $user_maps[ $userid ];
@@ -70,55 +70,53 @@ class SendPostcards extends Command
             }
 
             if( ! $user_map  ){
-                $this->triggerFailed( $postcard_triggers, 'User Map not found' );
+                $this->triggerFailed( $letter_triggers, 'User Map not found' );
                 continue;
             }
 
-            if( ! $postcard_triggers->postcard_id ){
-                $this->triggerFailed( $postcard_triggers, 'Action has no postcard id' );
-                continue;
-            }
-
-            $postcard = (new PostcardEntity)->f( $postcard_triggers->postcard_id );
-
-            $to_address     =  $this->leadAddress( $postcard_triggers );
+            $to_address     =  $this->leadAddress( $letter_triggers );
             $from_address   =  $this->accountAddress( $user_map );
             $key = $this->getLobKey( $user_map );
 
             if( ! $to_address ){
-                $this->triggerFailed( $postcard_triggers , $this->error_message );
+                $this->triggerFailed( $letter_triggers , $this->error_message );
                 continue;
             }
+
 
             if( ! $key ){
-                $this->triggerFailed( $postcard_triggers , 'LOB key not found' );
+                $this->triggerFailed( $letter_triggers , 'LOB key not found' );
                 continue;
             }
+
+            $message = ( new CampaignActionEntity )->f( $letter_triggers->actionid )
+                ->mergeMessage( $letter_triggers->leadid );
+
             try{
-                $this->sendPostcards(  $key , $postcard , $to_address ,$from_address );
+                $this->sendLetters(  $key , $message , $to_address ,$from_address );
             }catch( \Exception $e ){
-                $this->triggerFailed( $postcard_triggers , $e->getMessage() );
+                $this->triggerFailed( $letter_triggers , $e->getMessage() );
                 continue;
             }
 
 
-            $postcard_triggers->status = 'sent';
-            $postcard_triggers->date_sent = date('Y-m-d H:i:s');
-            $postcard_triggers->save();
+            $letter_triggers->status = 'sent';
+            $letter_triggers->date_sent = date('Y-m-d H:i:s');
+            $letter_triggers->save();
 
         }
     }
 
-    private function triggerFailed( $postcard_triggers , $message  )
+    private function triggerFailed( $letter_triggers , $message  )
     {
-        $postcard_triggers->status = 'failed';
-        $postcard_triggers->save();
+        $letter_triggers->status = 'failed';
+        $letter_triggers->save();
 
         $m = ( new ActionTriggerMapMessage )->store(
             [
-                'mapid' => $postcard_triggers->mapid ,
+                'mapid' => $letter_triggers->mapid ,
                 'message' => $message,
-                'generated_by' => 'SendPostcard cron command'
+                'generated_by' => 'Sendletter cron command'
             ]
         );
 
@@ -140,7 +138,6 @@ class SendPostcards extends Command
             'address_country' => 'US',
             'address_zip' => '92694'
         ];
-        //return $user_map->br_address.' '.$user_map->br_city.' '.$user_map->br_state.' '.$user_map->br_zip;
     }
 
     private function leadAddress( $lead )
@@ -176,11 +173,11 @@ class SendPostcards extends Command
         ];
     }
 
-    private function sendPostcards( $key , $postcard , $to_address ,$from_address )
+    private function sendLetters( $key , $message , $to_address ,$from_address )
     {
         $lobapi = new LobApi( $key );
-
-        $ps     =   $lobapi->sendMarketingPostcards( $postcard , $to_address , $from_address );
+        
+        $ps     =   $lobapi->sendMarketingLetters( $message , $to_address , $from_address );
         return $ps;
     }
 

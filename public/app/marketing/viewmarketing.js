@@ -11,10 +11,8 @@ var mVue = new Vue({
         postcards:[],
         postcard:{},
         postcard_id:0,
-
         loading_campaigns: false,
         loading_postcards: false
-
     },
     methods:{
         init(){
@@ -159,7 +157,6 @@ var mVue = new Vue({
             }
         },
         actionTypeSelected(){
-
             if( this.postcards.length == 0 ){
                 this.getPostcards();
             }

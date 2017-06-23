@@ -27,9 +27,20 @@ class UtilsController extends Controller{
 
     }
 
+    public function letters( Request $r )
+    {
+        /**
+        $postcard = PostcardEntity::find( 1 );
+        $to_address = '711-2880 Nulla St. Mankato Mississippi 96522';
+        $from_address = '606-3727 Ullamcorper Street Roseville NH 11523';
+        $key = '';
+        $lobapi = new LobApi( $key );
+        $ps = $lobapi->sendPostcard( $postcard , $to_address , $from_address );
+        **/
+    }
+
     public function getCampaignsByLead()
     {
-
         $user_id = 119;
         $user = UserEntity::find( $user_id );
         UserEntity::instance( 'me' , $user );

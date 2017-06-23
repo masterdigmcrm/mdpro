@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        '\App\Console\Commands\SendPostcards'
+        '\App\Console\Commands\SendPostcards',
+        '\App\Console\Commands\SendLetters'
     ];
 
     /**
@@ -24,7 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('send:postcards')->everyTenMinutes();
+        $schedule->command('postcards:send')->everyTenMinutes();
+        $schedule->command('letters:send')->everyTenMinutes();
     }
 
     /**

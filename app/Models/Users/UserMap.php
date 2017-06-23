@@ -2,7 +2,9 @@
 namespace App\Models\Users;
 
 use App\Models\Accounts\AccountEntity;
+use App\Models\Contacts\ContactEntity;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class UserMap extends Model
 {
@@ -15,9 +17,26 @@ class UserMap extends Model
         return $this->hasOne( AccountEntity::class, 'userid', 'broker_userid' );
     }
 
-    public static function byUserId( $userid )
+    /**
+     * @param $userid
+     * @return static
+     */
+    public static function byUserId( $userid , $options = [] )
     {
-        return static::where( 'userid' , $userid )->first();
+            $with = ['account'];
+            $user = static::where( 'a.userid' , $userid )
+                ->from( 'jos_mdigm_broker_user_map as a' )
+                ->leftJoin( 'jos_mdigm_contacts as c' , 'c.contactid', 'a.contactid' )
+                ->with( ['account' ] );
+
+            return $user->first();
+
+
+    }
+
+    public function contact( )
+    {
+        return $this->hasOne( ContactEntity::class , 'contactid' , 'contactid'  );
     }
 
     public function getParamValue( $value )
@@ -96,5 +115,23 @@ class UserMap extends Model
         }
 
         return \Form::select('assigned_to', $c_array , $default, [ 'id' => 'assigned_to', 'class' => 'form-control' ] );
+    }
+
+    public function getPictureHTML()
+    {
+        if( !$this->picture ){
+            return null;
+        }
+
+        if( substr( $this->picture, 0 , 4 ) == 'http' ){
+            $photo_url	=	$this->picture;
+        }else{
+            $photo_url	=	'http://www.masterdigm.com/images/brokers/'.$this->picture;
+        }
+
+        $photo	= 	'<img src="'.$photo_url.'" border="0" />';
+
+        return $photo;
+
     }
 }

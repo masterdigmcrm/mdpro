@@ -17,6 +17,7 @@
                                 <label for="type">Action Type</label>
                                 <select name="action_typeid" class="form-control" v-model="action_typeid" @change="actionTypeSelected">
                                     <option value="1" > Email </option>
+                                    <option value="3" > Letter </option>
                                     <option value="6" > Postcard </option>
                                 </select>
                             </div>
@@ -115,11 +116,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" v-show="action_typeid == 1">
+                    <div class="row" v-show = "action_typeid == 1 || action_typeid == 3">
                         <textarea name="editor1" id="editor1" rows="10" cols="80"></textarea>
                     </div>
                     <div v-show="action_typeid == 6">
-                        <h5><b>Choose A Postcard</b></h5>
+                        <h5> <b>Choose A Postcard</b></h5>
                         <table class="table table-striped">
                             <tr v-for="p in postcards">
                                 <td style="width:32px">
