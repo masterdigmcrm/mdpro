@@ -22,6 +22,7 @@ class LeadStatusMap extends BaseModel{
 
     public function getCollection( Request $r )
     {
+        $r->merge([ 'limit' => 500 ]);
         $this->setLpo( $r );
         $this->order_by = 'status';
 
