@@ -16,10 +16,15 @@ class CampaignTriggers extends Model{
 
     protected $fillable = [ 'campaignid', 'statusid', 'typeid' ];
 
+    public static function byCampaignId( $campaignid )
+    {
+        return static::where( 'campaignid' , $campaignid )->first();
+    }
+
     public function store( Request $r )
     {
         $validator = \Validator::make( $r->all() , [
-            'campaign_name' => 'required'
+
         ] );
 
         if( $validator->fails() ){
@@ -30,14 +35,13 @@ class CampaignTriggers extends Model{
         $this->fill( $r->all() );
         $pk = $this->primaryKey;
 
-        $this->campaign_type = $r->campaign_type ? $r->campaign_type : 'drip';
-
         if( $r->$pk  ){
             $this->exists = true;
         }else{
-            $this->date_created = date( 'Y-m-d H:i:s' );
-            $this->ownerid = $r->user()->id;
-            $this->deleted = '0';
+            $this->action       =  'add';
+            $this->condition    =  'equals';
+            $this->value    =  ' ';
+            $this->andor    = 'and';
         }
 
         $this->save();

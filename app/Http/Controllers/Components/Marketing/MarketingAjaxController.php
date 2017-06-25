@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Components\Marketing;
 
 
 use App\Models\Accounts\AccountEntity;
+use App\Models\Leads\LeadStatusMap;
+use App\Models\Leads\LeadTypes;
 use App\Models\Marketing\ActionTriggerMap;
 use App\Models\Marketing\CampaignActionEntity;
 use App\Models\Marketing\CampaignCollection;
 use App\Models\Marketing\CampaignEntity;
+use App\Models\Marketing\CampaignTriggers;
 use App\Models\Postcards\PostcardCollection;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -24,17 +27,23 @@ class MarketingAjaxController extends Controller
     public function init( Request $r )
     {
         $campaigns = new CampaignCollection();
-        $r->merge([ 'ownerid' => $r->user()->id , 'with_actions' => true ]);
+        $r->merge([ 'ownerid' => $r->user()->id , 'with_actions' => true , 'order_by' => 'campaign_name' ]);
+
+        $lead_types     =  ( new LeadTypes() )->getCollection( $r );;
+        $lead_status    = ( new LeadStatusMap )->getCollection( $r );;
 
         return [
             'success' =>true,
-            'campaigns' => $campaigns->getCollection( $r )
+            'campaigns' => $campaigns->getCollection( $r ),
+            'lead_types' => $lead_types,
+            'lead_status' => $lead_status
         ];
     }
 
     public function saveCampaign( Request $r )
     {
         $campaign = new CampaignEntity();
+
         if( ! $campaign->store( $r ) ){
             return [
                 'success' => false,
@@ -42,10 +51,19 @@ class MarketingAjaxController extends Controller
             ];
         }
 
+        if( ! $trigger = CampaignTriggers::byCampaignId( $campaign->campaign_id ) ){
+            $trigger = new CampaignTriggers();
+        }
+
+        $r->merge(['campaignid' => $campaign->campaignid ]);
+        $trigger->store( $r );
+
+
         return [
             'success' => true,
             'campaign' => $campaign
         ];
+
     }
     
     public function saveAction( Request $r )

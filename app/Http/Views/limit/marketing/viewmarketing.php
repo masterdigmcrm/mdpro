@@ -115,7 +115,7 @@
                                 <div class="form-group">
                                     <select name="status" class="form-control">
                                         <option value="0"> Any </option>
-                                        <option value="" v-for="n in 5" :value="n"> {{n}} </option>
+                                        <option value="" v-for="s in lead_status" :value="s.statusid"> {{s.status}} </option>
                                     </select>
                                 </div>
                             </div>
@@ -124,7 +124,7 @@
                                 <div class="form-group">
                                     <select name="type" class="form-control">
                                         <option value="0"> Any </option>
-                                        <option value="" v-for="n in 5" :value="n"> {{n}} </option>
+                                        <option value="" v-for="t in lead_types" :value="t.typeid"> {{t.type}} </option>
                                     </select>
                                 </div>
                             </div>

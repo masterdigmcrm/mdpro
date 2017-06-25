@@ -15,7 +15,7 @@ class CampaignEntity extends BaseModel{
 
     public $timestamps = false;
 
-    protected $fillable = [ 'campaign_description', 'campaign_name', '' ];
+    protected $fillable = [ 'campaign_description', 'campaign_name', 'availability' , 'published' , 'campaign_type' ];
 
     public function store( Request $r )
     {

@@ -22,7 +22,7 @@ class CampaignCollection extends CampaignEntity{
             ->whereRaw( "published = '1' " )
             ->whereRaw( "deleted = '0' " );
 
-        $this->query->join( 'jos_mdigm_marketing_triggers as t', 't.campaignid' , '=', 'a.campaignid'  );
+        $this->query->leftjoin( 'jos_mdigm_marketing_triggers as t', 't.campaignid' , '=', 'a.campaignid'  );
 
         if( $r->status ){
             $this->query->where( 't.statusid' , $r->status );

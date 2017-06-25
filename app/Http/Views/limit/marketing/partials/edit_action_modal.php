@@ -145,7 +145,7 @@
                 <?php echo csrf_field() ?>
                 <input type="hidden" name="campaignid" id="campaignid" value="" v-model="campaign.campaignid"/>
                 <input type="hidden" name="template_name" id="template_name" value="" />
-                <input type="hidden" name="message" id="message" value="" v-model="action_message" />
+                <input type="hidden" name="message" id="message" value=""  />
             </form>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" @click="saveAction">Save</button>

@@ -11,6 +11,8 @@ var mVue = new Vue({
         postcards:[],
         postcard:{},
         postcard_id:0,
+        lead_status: [],
+        lead_types:[],
         loading_campaigns: false,
         loading_postcards: false
     },
@@ -23,6 +25,8 @@ var mVue = new Vue({
             .done(function( data ){
                 if( data.success){
                     vm.campaigns= data.campaigns;
+                    vm.lead_status = data.lead_status;
+                    vm.lead_types = data.lead_types;
                 }else{
                     toastr.error( data.message );
                 }
@@ -42,17 +46,42 @@ var mVue = new Vue({
             })[0]
 
         },
-        saveCampaign(){
+        saveCampaign( e ){
             let vm = this;
+            let btn = $(e.target);
+            let h   = btn.html();
+
+            $('.btn').prop('disabled', true );
+            btn.html( '<i class="icon-spinner2 spinner"></i>' );
+
             $.post( '/ajax/campaign', $('#campaignForm').serialize() )
             .done( function( data ){
                 if( data.success){
+                    let is_new = true;
 
+                    for( i=0; i < vm.campaigns.length; i++ ){
+                        d = vm.campaigns[i];
+                        if( d.campaignid == data.campaign.campaignid ){
+                            Vue.set( vm.campaigns , i , data.campaign);
+                            is_new = false;
+                        }
+                    }
+
+                    if( is_new ){
+                        vm.campaigns.push( data.campaign );
+                    }
+
+                    vm.init();
+                    $('#editModal').modal( 'toggle' );
                 }else{
                     toastr.error( data.message );
                 }
+                    $('.btn').prop('disabled', false );
+                    btn.html(h);
             }).error(function( data ){
                 toastr.error('Something went wrong');
+                    $('.btn').prop('disabled', false );
+                    btn.html(h);
             });
         },
         getPostcards(){
@@ -75,6 +104,8 @@ var mVue = new Vue({
         addAction(){
             let vm = this;
             $('#editActionModal').modal();
+            CKEDITOR.instances['editor1'].setData('');
+            $('#subject').val( '' );
         },
         saveAction( e ){
             let vm = this;
@@ -95,6 +126,7 @@ var mVue = new Vue({
                 }
             }
 
+            $('#message').val( CKEDITOR.instances['editor1'].getData() );
             $.post( '/ajax/campaign/action' , $('#actionForm').serialize() )
             .done(function( data ){
                 if( data.success ){
@@ -154,6 +186,8 @@ var mVue = new Vue({
         actionDelaySelected( e ){
             if( $(e.target).val() == -1 ){
                 this.action_sending_delay = -1;
+            }else{
+                this.action_sending_delay = 0;
             }
         },
         actionTypeSelected(){
