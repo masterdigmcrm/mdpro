@@ -47,9 +47,9 @@ class SendPostcards extends Command
     public function handle()
     {
         $r = new Request();
-        $r->merge( [ 'action_typeid' => 6 , 'status' => 'onqueue'  ] );
-        $collection = ActionTriggerMap::factory()->getCollection( $r );
+        $r->merge( [ 'date_sending_sched' => date('Y-m-d'), 'action_typeid' => 6 , 'status' => 'onqueue'  ] );
 
+        $collection = ActionTriggerMap::factory()->getCollection( $r );
         $user_maps = [];
 
         foreach( $collection as $postcard_triggers ){

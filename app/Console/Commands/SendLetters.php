@@ -46,10 +46,11 @@ class SendLetters extends Command
      */
     public function handle()
     {
+
         $r = new Request();
-        $r->merge( [ 'action_typeid' => 3 , 'status' => 'onqueue' , 'limit' => 1  ] );
+        $r->merge( [ 'date_sending_sched' => date('Y-m-d'), 'action_typeid' => 3 , 'status' => 'onqueue' , 'limit' => 1  ] );
+
         $collection = ActionTriggerMap::factory()->getCollection( $r );
-        //dd( $collection );
         $user_maps = [];
 
         foreach( $collection as $letter_triggers ){

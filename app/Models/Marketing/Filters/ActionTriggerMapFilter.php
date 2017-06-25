@@ -27,5 +27,8 @@ class ActionTriggerMapFilter extends AbstractFilter{
         $this->query->where( 'm.actionid' , $v );
     }
 
-
+    public function dateSendingSchedFilter( $k, $v )
+    {
+        $this->query->whereDate( 'date_sending_sched', $v );
+    }
 }
