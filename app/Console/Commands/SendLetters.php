@@ -48,7 +48,7 @@ class SendLetters extends Command
     {
 
         $r = new Request();
-        $r->merge( [ 'date_sending_sched' => date('Y-m-d'), 'action_typeid' => 3 , 'status' => 'onqueue' , 'limit' => 1  ] );
+        $r->merge( [ 'date_sending_sched' => date('Y-m-d'), 'action_typeid' => 3 , 'status' => 'onqueue' , 'limit' => 10  ] );
 
         $collection = ActionTriggerMap::factory()->getCollection( $r );
         $user_maps = [];
