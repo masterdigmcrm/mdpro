@@ -68,7 +68,6 @@ class LobApi{
 
     public function sendMarketingLetters( $message,  $to_address , $from_address , $options = [] )
     {
-
         $to_address     = $this->lob->addresses()->create( $to_address );
         $from_address   = $this->lob->addresses()->create( $from_address );
 
@@ -76,7 +75,7 @@ class LobApi{
             'to'            => $to_address['id'],
             'from'          => $from_address['id'],
             'color'         =>	false,
-            'file'          => '<div style="height:350px"> &nbsp; </div>'.$message,
+            'file'          => '<div style="height:360px"> &nbsp; </div><div style="padding:24px">'.$message.'</div>',
         ));
 
         return $letter;
