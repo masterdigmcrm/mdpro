@@ -76,7 +76,7 @@ class LobApi{
             'to'            => $to_address['id'],
             'from'          => $from_address['id'],
             'color'         =>	false,
-            'file'          => $message,
+            'file'          => '<div style="height:350px"> &nbsp; </div>'.$message,
         ));
 
         return $letter;
