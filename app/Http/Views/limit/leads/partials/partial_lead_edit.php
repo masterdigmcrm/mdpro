@@ -79,25 +79,25 @@
                 <div class="col-lg-6 col-sm-6">
                     <div class="form-group">
                         <label for="city">City</label>
-                        <input type="text" name="primary_address_city" value="" id="city" class="form-control" />
+                        <input type="text" name="primary_address_city" value="" id="city" class="form-control" :value="lead.primary_address_city" />
                     </div>
                     <div class="form-group">
                         <label for="state">State</label>
-                        <input type="text" name="primary_address_state" value="" id="state" class="form-control" />
+                        <input type="text" name="primary_address_state" value="" id="state" class="form-control" :value="lead.primary_address_state" />
                     </div>
                     <div class="form-group">
                         <label for="country">Country</label>
-                        <input type="text" name="primary_address_country" value="" id="country" class="form-control" />
+                        <input type="text" name="primary_address_country" value="" id="country" class="form-control" :value="lead.primary_address_country" />
                     </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="form-group">
                         <label for="street_address">Street Address</label>
-                        <input type="text" name="primary_address_street" value="" id="primary_street_address" class="form-control" :value="lead.primary_address_street"/>
+                        <input type="text" name="primary_address_street" value="" id="primary_street_address" class="form-control" :value="lead.primary_address_street" />
                     </div>
                     <div class="form-group">
                         <label for="type">Postal Code</label>
-                        <input type="text" name="primary_address_postalcode" value="" id="primary_address_postalcode" class="form-control" :value="lead.primary__street_postalcode" />
+                        <input type="text" name="primary_address_postalcode" value="" id="primary_address_postalcode" class="form-control" :value="lead.primary_address_postalcode" />
                     </div>
                 </div>
             </div>

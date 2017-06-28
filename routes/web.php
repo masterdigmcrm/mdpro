@@ -37,6 +37,8 @@ if( \Request::segment(1) == 'component'){
             Route::get('marketing/postcards', 'Components\Marketing\MarketingController@postcards' );
             return;
         }
+
+        Route::get('settings', 'Components\Settings\SettingsController@index' );
     });
 }
 

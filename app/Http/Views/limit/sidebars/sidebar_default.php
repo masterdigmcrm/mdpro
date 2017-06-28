@@ -10,6 +10,7 @@
                     <li><a href="<?php echo Url('component/marketing/postcards') ?>"><i class="icon-home"></i> <span> Postcards </span></a></li>
                 </ul>
             </li>
+            <li><a href="<?php echo Url('component/settings') ?>"><i class="icon-gear"></i> <span> Settings </span></a></li>
             <li><a href="<?php echo Url('logout') ?>"><i class="icon-switch"></i> <span> Logout </span></a></li>
         </ul>
     </div>

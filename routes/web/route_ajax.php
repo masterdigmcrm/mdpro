@@ -69,6 +69,13 @@ if( \Request::segment(2) == 'leads'){
     return;
 }
 
+if( \Request::segment(2) == 'settings'){
+    Route::group( [ 'prefix' => 'settings', 'namespace' => 'Components\Settings' ], function(){
+        Route::post( 'lob' , 'AjaxSettingsController@saveLobKey' );
+        Route::get( 'init' , 'AjaxSettingsController@init' );
+    });
+}
+
 if( in_array( \Request::segment(2) , [ 'marketing', 'campaign' , 'campaigns'] ) ){
     Route::group( [ 'prefix' => 'campaign', 'namespace' => 'Components\Marketing' ], function(){
         Route::post( '', 'MarketingAjaxController@saveCampaign' );
