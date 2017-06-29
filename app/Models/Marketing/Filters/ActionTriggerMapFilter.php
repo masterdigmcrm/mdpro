@@ -24,7 +24,11 @@ class ActionTriggerMapFilter extends AbstractFilter{
     
     public function actionIdFilter( $k , $v )
     {
-        $this->query->where( 'm.actionid' , $v );
+        if( is_array( $v) ){
+            $this->query->whereIn( 'm.actionid' , $v );
+        }else{
+            $this->query->where( 'm.actionid' , $v );
+        }
     }
 
     public function dateSendingSchedFilter( $k, $v )

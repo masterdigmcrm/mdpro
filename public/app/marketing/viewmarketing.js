@@ -1,7 +1,7 @@
 var mVue = new Vue({
     el:'#mDiv',
     data:{
-        campaign:{ actions: [] },
+        campaign:{ actions: [] , trigger:{} },
         campaigns:[],
         action:{},
         actions:[],
@@ -37,13 +37,14 @@ var mVue = new Vue({
                 vm.loading_campaigns = false;
             });
         },
-        openEditDiv(){
-            $('#editModal').modal();
-        },
         campaignSelected( cid ){
-            this.campaign = $.grep( this.campaigns , function(c){
-                return c.campaignid == cid;
-            })[0]
+            try{
+                this.campaign = $.grep( this.campaigns , function(c){
+                    return c.campaignid == cid;
+                })[0]
+            }catch( e ){
+                toastr.error( e.message )
+            }
 
         },
         saveCampaign( e ){
@@ -83,6 +84,30 @@ var mVue = new Vue({
                     $('.btn').prop('disabled', false );
                     btn.html(h);
             });
+        },
+        openEditDiv(){
+            this.campaign = { actions: [] , trigger: {} };
+            $('#editModal').modal();
+        },
+        editCampaign( e ){
+            $('#editModal').modal();
+        },
+        deleteCampaign( e ){
+            if( ! confirm( 'Are you sure you want to delete this campaign ? All pending actions will be cancelled. ' ) ){
+                return null;
+            }
+
+            let vm = this;
+            $.ajax({ url: '/ajax/marketing/campaign', type: 'DELETE',dataType:'json',
+                data:{ campaignid:  vm.campaign.campaignid , _token:$('input[name="_token"]').val() },
+                success: function( result ) {
+                    vm.campaign = { actions: [] , trigger: {} };
+                    vm.init();
+                    toastr.success( 'Campaign successfully deleted' );
+                }
+            }).fail(function() {
+
+            })
         },
         getPostcards(){
             let vm = this;

@@ -50,5 +50,10 @@ class CampaignEntity extends BaseModel{
     {
         return $this->hasMany( CampaignActionEntity::class, 'campaignid' , 'campaignid' );
     }
+    
+    public function trigger( )
+    {
+        return $this->hasOne( CampaignTriggers::class, 'campaignid' , 'campaignid' );
+    }
 
 }

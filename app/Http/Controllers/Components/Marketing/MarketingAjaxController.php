@@ -7,6 +7,7 @@ use App\Models\Accounts\AccountEntity;
 use App\Models\Leads\LeadStatusMap;
 use App\Models\Leads\LeadTypes;
 use App\Models\Marketing\ActionTriggerMap;
+use App\Models\Marketing\CampaignActionCollection;
 use App\Models\Marketing\CampaignActionEntity;
 use App\Models\Marketing\CampaignCollection;
 use App\Models\Marketing\CampaignEntity;
@@ -27,7 +28,9 @@ class MarketingAjaxController extends Controller
     public function init( Request $r )
     {
         $campaigns = new CampaignCollection();
-        $r->merge([ 'ownerid' => $r->user()->id , 'with_actions' => true , 'order_by' => 'campaign_name' ]);
+        $r->merge( ['ownerid' => $r->user()->id ,
+            'with_actions' => true , 'with_trigger' => true,
+            'order_by' => 'campaign_name'] );
 
         $lead_types     =  ( new LeadTypes() )->getCollection( $r );;
         $lead_status    = ( new LeadStatusMap )->getCollection( $r );;
@@ -44,6 +47,10 @@ class MarketingAjaxController extends Controller
     {
         $campaign = new CampaignEntity();
 
+        if( $r->campaignid  ){
+            $campaign = CampaignEntity::f( $r->campaignid );
+        }
+
         if( ! $campaign->store( $r ) ){
             return [
                 'success' => false,
@@ -51,11 +58,11 @@ class MarketingAjaxController extends Controller
             ];
         }
 
-        if( ! $trigger = CampaignTriggers::byCampaignId( $campaign->campaign_id ) ){
+        if( ! $trigger = CampaignTriggers::byCampaignId( $campaign->campaignid ) ){
+            $r->merge(['campaignid' => $campaign->campaignid ]);
             $trigger = new CampaignTriggers();
         }
 
-        $r->merge(['campaignid' => $campaign->campaignid ]);
         $trigger->store( $r );
 
 
@@ -65,7 +72,34 @@ class MarketingAjaxController extends Controller
         ];
 
     }
-    
+
+    public function deleteCampaign( Request $r )
+    {
+        if( ! $campaign = CampaignEntity::f( $r->campaignid ) ){
+            return [
+                'success' =>false,
+                'message' => ' Campaign not found'
+            ];
+        }
+
+        $campaign->deleted = '1';
+        $campaign->save();
+
+        // cancel all actions on queue
+        $actionid = ( new CampaignActionCollection )->getCollection( $r )->pluck('actionid')->toArray();
+        $updated = [];
+
+        if( count( $actionid )){
+            $updated = ( new ActionTriggerMap )->cancelByActionId( $actionid );
+        }
+
+        return [
+            'success'  => true,
+            'campaign' => $campaign,
+            'updated' => $updated
+        ];
+    }
+
     public function saveAction( Request $r )
     {
         $action = new CampaignActionEntity();

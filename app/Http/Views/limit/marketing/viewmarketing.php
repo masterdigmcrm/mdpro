@@ -27,11 +27,13 @@
                             <div class="panel panel-white" v-show="campaign.campaignid">
                                 <div class="panel-heading">
                                     <div class="row">
-                                        <div class="col-lg-8">
+                                        <div class="col-lg-6">
                                             <h4><b>{{ campaign.campaign_name }}</b></h4>
                                         </div>
-                                        <div class="col-lg-4" style="text-align: right">
+                                        <div class="col-lg-6" style="text-align: right">
+                                            <button class="btn btn-default" @click="editCampaign"> <i class="icon-pencil3"></i> Edit </button>
                                             <button class="btn btn-primary" @click="addAction"> <i class="icon-plus3"></i> Create Action </button>
+                                            <button class="btn btn-danger" @click="deleteCampaign"> <i class="icon-cross"></i> </button>
                                         </div>
                                     </div>
 
@@ -83,24 +85,24 @@
                             <div class="col-lg-9">
                                 <div class="form-group">
                                     <label for="campaign_name">Campaign Name</label>
-                                    <input type="text" name="campaign_name" value="" id="campaign_name" class="form-control" />
+                                    <input type="text" name="campaign_name" value="" id="campaign_name" class="form-control" :value="campaign.campaign_name"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="campaign_description">Description</label>
-                                    <textarea name="campaign_description" id="campaign_description" class="form-control"></textarea>
+                                    <textarea name="campaign_description" id="campaign_description" class="form-control" v-html="campaign.campaign_description"></textarea>
                                 </div>
                             </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label for="">Published</label>
-                                    <select name="published" class="form-control">
+                                    <select name="published" class="form-control" v-model="campaign.published">
                                         <option value="0"> No </option>
                                         <option value="1"> Yes </option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="availability"> Availability </label>
-                                    <select name="availability" class="form-control">
+                                    <select name="availability" class="form-control" v-model="campaign.availability">
                                         <option value="private"> Private </option>
                                         <option value="public"> Public </option>
                                     </select>
@@ -113,7 +115,7 @@
                             <div class="col-lg-6">
                                 Send message when <b>lead status</b> equals <br />
                                 <div class="form-group">
-                                    <select name="status" class="form-control">
+                                    <select name="statusid" class="form-control" :value="campaign.trigger.statusid">
                                         <option value="0"> Any </option>
                                         <option value="" v-for="s in lead_status" :value="s.statusid"> {{s.status}} </option>
                                     </select>
@@ -122,7 +124,7 @@
                             <div class="col-lg-6">
                                 Send message when <b>lead type</b> equals <br />
                                 <div class="form-group">
-                                    <select name="type" class="form-control">
+                                    <select name="typeid" class="form-control" >
                                         <option value="0"> Any </option>
                                         <option value="" v-for="t in lead_types" :value="t.typeid"> {{t.type}} </option>
                                     </select>

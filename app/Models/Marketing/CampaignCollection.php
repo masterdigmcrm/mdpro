@@ -32,10 +32,14 @@ class CampaignCollection extends CampaignEntity{
         }
 
         if( $r->with_actions ){
-            $this->query->with(['actions' => function( $query ){
+            $this->query->with([ 'actions' => function( $query ){
                 $query->whereRaw( " deleted = '0' " );
                 $query->whereRaw( " published = '1' " );
             }]);
+        }
+
+        if( $r->with_trigger ){
+            $this->query->with( [ 'trigger' ] );
         }
 
         if( $account->userid != $user_id ){
