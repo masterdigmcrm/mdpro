@@ -64,7 +64,10 @@ class SendPostcards extends Command
                 $user_map = UserMap::where( 'm.userid' , $userid )
                     ->from( 'jos_mdigm_broker_user_map as m')
                     ->join( 'jos_mdigm_broker as b' , 'm.broker_userid' ,'=' ,'b.userid' )
-                    ->first( [ 'br_address' , 'br_city','br_state', 'br_zip' , 'b.userid' , 'b.brokerid' ,'m.params' ] );
+                    ->leftJoin( 'jos_mdigm_contacts as c' , 'm.contactid' , '=' , 'c.contactid' )
+                    ->first( [ 'br_first_name','br_last_name', 'br_address' , 'br_city','br_state',
+                        'br_zip' , 'b.userid' , 'b.brokerid' ,'m.params' ,
+                        'c.contact_firstname' , 'c.contact_lastname' , 'contact_street' , 'contact_city' , 'contact_state' , 'contact_zipcode' ] );
 
                 $user_maps[ $userid ] = $user_map;
             }
@@ -132,13 +135,27 @@ class SendPostcards extends Command
 
     private function accountAddress( $user_map )
     {
+        if( $user_map->broker_userid == $user_map->userid ){
+            $name = $user_map->br_first_name.' '.$user_map->br_last_name;
+            $address = '';
+            $city = '';
+            $state = '';
+            $postal_code = '';
+        }else{
+            $name = ' ';
+            $address = '';
+            $city = '';
+            $state = '';
+            $postal_code = '';
+        }
+
         return [
-            'name' => 'Masterdigm ',
-            'address_line1' =>  '10 Second St' ,
-            'address_city' =>  'Ladera Ranch',
-            'address_state' => 'CA',
+            'name' => $name,
+            'address_line1' =>  $address ,
+            'address_city' =>  $city,
+            'address_state' => $state,
             'address_country' => 'US',
-            'address_zip' => '92694'
+            'address_zip' => $postal_code
         ];
         //return $user_map->br_address.' '.$user_map->br_city.' '.$user_map->br_state.' '.$user_map->br_zip;
     }

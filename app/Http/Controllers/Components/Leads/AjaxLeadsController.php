@@ -27,8 +27,9 @@ class AjaxLeadsController{
 
     public function getLeads( Request $r )
     {
+        
         $leads = new LeadCollection();
-        $r->request->add(['ownerid' => UserEntity::me()->userMap->account->userid ]);
+        $r->request->add([ 'assigned_to' => $r->user()->id ]);
         return [
             'success' => true,
             'leads' => $leads->getCollection( $r ),

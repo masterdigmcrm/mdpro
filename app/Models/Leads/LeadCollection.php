@@ -8,13 +8,14 @@ class LeadCollection extends LeadEntity{
 
     public function getCollection( Request $r )
     {
-        if( ! $r->ownerid ){
+        if( ! $r->assigned_to ){
             return [];
         }
 
         $this->setLpo( $r );
         $this->order_by = $r->order_by ? $r->order_by :  'date_entered';
         $this->order_direction = $r->order_direction ? $r->order_direction :  'DESC';
+        $assigned_to = $r->assigned_to;
 
         $fields = [ 'l.*' , 's.status', 't.type', 'so.source' ];
 
@@ -28,7 +29,11 @@ class LeadCollection extends LeadEntity{
             return $query->first( $fields );
         }
 
-        $query->where( 'l.ownerid' , $r->ownerid );
+        $query->where( function( $query ) use( $assigned_to ) {
+            $query->where( 'assigned_to' , $assigned_to )
+                ->whereOr( 'ownerid' , $assigned_to );
+        });
+
         $query->where( 'l.deleted' , 0 );
 
         if( $r->q ){
