@@ -14,9 +14,13 @@ class ImageHelper {
      * @return mixed
      */
 
-    public static function generateThumbNails( $photo_path ,  $options = [] )
+    public static function generateThumbNails( $photo_path,  $options = [] , $image = null )
     {
-        $image = \Image::make( $photo_path );
+
+        if( ! $image ){
+            $image = \Image::make( $photo_path );
+        }
+
         $filename = basename( $photo_path );
 
         /**

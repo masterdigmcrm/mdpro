@@ -17,7 +17,7 @@ class PostcardEntity extends BaseModel{
     public $timestamps = false;
 
     protected $fillable = [ 'postcard_id', 'postcard_name',
-        'account_id' , 'front' , 'back' ];
+        'account_id' , 'front' , 'back' , 'dimension'];
 
     public function store( Request $r )
     {
@@ -38,7 +38,6 @@ class PostcardEntity extends BaseModel{
         }else{
 
         }
-
         $this->save();
 
         return $this;
@@ -62,6 +61,7 @@ class PostcardEntity extends BaseModel{
             return false;
         }
 
+
         $valid_files = [ 'png', 'jpeg',  'jpg'  ];
         $ext = $r->file( $r->file_name )->getClientOriginalExtension();
 
@@ -71,6 +71,7 @@ class PostcardEntity extends BaseModel{
         }
 
         $orig_filename  = $r->file( $r->file_name )->getClientOriginalName();
+
         $new_filename   = 'pc_'.str_random( 8 ).'.'.$ext;
         $uid            = Utils::convertInt( $r->user()->id );
         $lt             = substr( $uid, -3 );
@@ -87,10 +88,30 @@ class PostcardEntity extends BaseModel{
         $r->file( $r->file_name )->move( $destination, $new_filename );
         $file_path  = $destination.$new_filename;
 
-        ImageHelper::generateThumbNails( $file_path );
+        // check if image is valid size
+
+        $image = \Image::make( $file_path );
+        $dimension = explode( '-' , $r->dimension );
+
+        if( $image->width() != $dimension[1] ){
+            // delete image
+            unlink( $file_path );
+            $this->errors[] = 'Invalid image width of '.$image->width().'px. Expecting '.$dimension[1].'px';
+            return false;
+        }
+
+        if(  $image->height() != $dimension[0]  ){
+            // delete image
+            unlink( $file_path );
+            $this->errors[] = 'Invalid image height of '.$image->height().'px. Expecting '.$dimension[0].'px';
+            return false;
+        }
+
+        ImageHelper::generateThumbNails( $file_path , [] , $image  );
 
         $section = $r->section;
         $this->$section = $url;
+        $this->dimension = $r->dimension;
         $this->save();
 
         return $this;

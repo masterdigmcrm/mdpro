@@ -64,11 +64,20 @@
                     <form id="pForm">
                     <div class="row">
                         <div class="form-group col-lg-8" >
+                            <div><label for="dimension">Postcard Name:</label></div>
                             <div class="input-group">
                                  <input type="text" v-model="postcard.postcard_name" placeholder="Postcard Name" name="postcard_name" value="" id="postcard_name" class="form-control" />
                                  <span class="input-group-btn">
                                     <button class="btn btn-primary" type="button" @click="savePostcard"> Save </button>
                                   </span>
+                            </div>
+                            <div class="form-group">
+                                <label for="dimension">Postcard Size:</label>
+                                <select name="dimension" class="form-control" v-model="postcard.dimension">
+                                    <option value="1275-1875"> 4.25" x 6.25" </option>
+                                    <option value="1875-2775"> 6.25" x 9.25" </option>
+                                    <option value="1875-3375"> 6.25" x 11.25" </option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -78,12 +87,15 @@
                                  <i class="fa fa-question"></i> Tip
                             </div>
                             <div class="col-lg-12">
-                                <div class="alert alert-info hide" id="p_info">
+                                <div class="alert alert-info" id="p_info">
                                     When using PNGs or JPEGs for postcards, we require a minimum of 300 dpi.
                                     The dpi is calculated as (width of image in pixels) / (width of product in inches) and
                                     (length of image in pixels) / (length of product in inches).
-                                    Right now we support on images of sizes 1275px x 1875px image used to create
-                                    a 4.25" x 6.25" postcard with a dpi of 300.
+                                    Right now we support the following image sizes:
+                                    <br /> 1275px x 1875px for a 4.25" x 6.25" postcard with a dpi of 300.
+                                    <br /> 1875px x 2775px for a 6.25"x9.25" postcard with a dpi of 300. ( US Only )
+                                    <br /> 1875px x 3375px for a 6.25"x11.25" postcard with a dpi of 300. ( US Only )
+
                                 </div>
                             </div>
                         </div>

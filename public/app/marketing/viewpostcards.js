@@ -2,7 +2,7 @@ var pVue = new Vue({
     el:'#pDiv',
     data:{
         postcards:[],
-        postcard:{},
+        postcard:{ dimension : '1275-1875' },
         progress_front: 0,
         progress_back: 0,
         edit_postcard : false
@@ -28,6 +28,10 @@ var pVue = new Vue({
             this.postcard = $.grep( this.postcards, function( p ){
                 return p.postcard_id == postcard_id;
             })[0];
+
+            if( ! this.postcard.dimension ){
+                this.postcard.dimension = '1275-1875';
+            }
             $('#postcardModal').modal()
         },
         savePostcard( e ){

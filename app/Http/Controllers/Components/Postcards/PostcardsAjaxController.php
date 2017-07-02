@@ -21,7 +21,8 @@ class PostcardsAjaxController extends Controller
 
     public function savePostcard( Request $r )
     {
-        $postcard =  new PostcardEntity;
+
+        $postcard = $r->postcard_id ? PostcardEntity::find( $r->postcard_id ) : new PostcardEntity;
 
         if( ! $postcard->store( $r ) ){
             return [
