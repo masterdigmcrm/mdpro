@@ -88,7 +88,7 @@ class CampaignActionEntity extends BaseModel{
         }
 
         $action_user    =   UserMap::byUserId( $ownerid );
-        $action_broker  =   ( new AccountEntity )->byUserId( $ownerid );
+        $action_broker  =   ( new AccountEntity )->byUserId( $action_user->broker_userid );
 
         if(  $action_user->is_manager() ){
 

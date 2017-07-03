@@ -65,9 +65,9 @@ class SendPostcards extends Command
                     ->from( 'jos_mdigm_broker_user_map as m')
                     ->join( 'jos_mdigm_broker as b' , 'm.broker_userid' ,'=' ,'b.userid' )
                     ->leftJoin( 'jos_mdigm_contacts as c' , 'm.contactid' , '=' , 'c.contactid' )
-                    ->first( [ 'br_first_name','br_last_name', 'br_address' , 'br_city','br_state',
-                        'br_zip' , 'b.userid' , 'b.brokerid' ,'m.params' ,
-                        'c.contact_firstname' , 'c.contact_lastname' , 'contact_street' , 'contact_city' , 'contact_state' , 'contact_zipcode' ] );
+                    ->first( [ 'm.userid as userid', 'm.contactid', 'broker_userid','br_firstname','br_lastname', 'br_address' , 'br_city','br_state',
+                        'br_zip' ,  'b.brokerid' ,'m.params' ,
+                        'c.contact_firstname' , 'c.contact_lastname' , 'contact_street' , 'contact_city' , 'contact_stateid' , 'contact_zipcode' ] );
 
                 $user_maps[ $userid ] = $user_map;
             }
@@ -88,8 +88,10 @@ class SendPostcards extends Command
             $from_address   =  $this->accountAddress( $user_map );
             $key = $this->getLobKey( $user_map );
 
+            $ttext = json_encode( $to_address );
+
             if( ! $to_address ){
-                $this->triggerFailed( $postcard_triggers , $this->error_message );
+                $this->triggerFailed( $postcard_triggers , $this->error_message.' '.$ttext );
                 continue;
             }
 
@@ -100,7 +102,7 @@ class SendPostcards extends Command
             try{
                 $this->sendPostcards(  $key , $postcard , $to_address ,$from_address );
             }catch( \Exception $e ){
-                $this->triggerFailed( $postcard_triggers , $e->getMessage() );
+                $this->triggerFailed( $postcard_triggers , $e->getMessage().' '.$ttext );
                 continue;
             }
 
@@ -138,7 +140,7 @@ class SendPostcards extends Command
         if( $user_map->broker_userid == $user_map->userid ){
 
 
-            $name       = $user_map->br_first_name.' '.$user_map->br_last_name;
+            $name       = $user_map->br_firstname.' '.$user_map->br_lastname;
             $address    = $user_map->br_address;
             $city       = $user_map->br_city;
             $s  = States::where( 'id' , $user_map->stateid )->first();

@@ -62,21 +62,17 @@ class SendLetters extends Command
             if( isset( $user_maps[$userid] ) ){
                 $user_map = $user_maps[ $userid ];
             }else{
-                /**
-                $user_map = UserMap::where( 'm.userid' , $userid )
-                    ->from( 'jos_mdigm_broker_user_map as m')
-                    ->join( 'jos_mdigm_broker as b' , 'm.broker_userid' ,'=' ,'b.userid' )
-                    ->first( [ 'br_address' , 'br_city','br_state', 'br_zip' , 'b.userid' , 'b.brokerid' ,'m.params' ] );
-                **/
+
                 $user_map = UserMap::where( 'm.userid' , $userid )
                     ->from( 'jos_mdigm_broker_user_map as m')
                     ->join( 'jos_mdigm_broker as b' , 'm.broker_userid' ,'=' ,'b.userid' )
                     ->leftJoin( 'jos_mdigm_contacts as c' , 'm.contactid' , '=' , 'c.contactid' )
-                    ->first( [ 'br_first_name','br_last_name', 'br_address' , 'br_city','br_state',
-                        'br_zip' , 'b.userid' , 'b.brokerid' ,'m.params' ,
-                        'c.contact_firstname' , 'c.contact_lastname' , 'contact_street' , 'contact_city' , 'contact_state' , 'contact_zipcode' ] );
+                    ->first( [ 'm.userid as userid', 'm.contactid', 'broker_userid','br_firstname','br_lastname', 'br_address' , 'br_city','br_state',
+                        'br_zip' ,  'b.brokerid' ,'m.params' ,
+                        'c.contact_firstname' , 'c.contact_lastname' , 'contact_street' , 'contact_city' , 'contact_stateid' , 'contact_zipcode' ] );
 
                 $user_maps[ $userid ] = $user_map;
+
             }
 
             if( ! $user_map  ){
@@ -86,13 +82,13 @@ class SendLetters extends Command
 
             $to_address     =  $this->leadAddress( $letter_triggers );
             $from_address   =  $this->accountAddress( $user_map );
+
             $key = $this->getLobKey( $user_map );
 
             if( ! $to_address ){
                 $this->triggerFailed( $letter_triggers , $this->error_message );
                 continue;
             }
-
 
             if( ! $key ){
                 $this->triggerFailed( $letter_triggers , 'LOB key not found' );
@@ -108,7 +104,6 @@ class SendLetters extends Command
                 $this->triggerFailed( $letter_triggers , $e->getMessage() );
                 continue;
             }
-
 
             $letter_triggers->status = 'sent';
             $letter_triggers->date_sent = date('Y-m-d H:i:s');
@@ -142,13 +137,14 @@ class SendLetters extends Command
     {
 
         if( $user_map->broker_userid == $user_map->userid ){
-            
-            $name       = $user_map->br_first_name.' '.$user_map->br_last_name;
+
+            $name       = $user_map->br_firstname.' '.$user_map->br_lastname;
             $address    = $user_map->br_address;
             $city       = $user_map->br_city;
             $s  = States::where( 'id' , $user_map->stateid )->first();
             $state      = $s ? $s->stateid : 'CA';
-            $postal_code = $user_map->zip;
+            $postal_code = $user_map->br_zip;
+
         }else{
 
             $name       = $user_map->contact_firstname.' '.$user_map->contact_lastname;
