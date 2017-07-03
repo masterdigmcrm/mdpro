@@ -1037,15 +1037,12 @@ init:function(a){
     var b=[];
     b.push(["[my_firstname]","My First Name","My First Name"]);
     b.push(["[my_lastname]","My Last Name","Last Name"]);
-    b.push(["[my_company_name]","My Company Name","Company Name"]);
+    b.push(["[my_company]","My Company Name","Company Name"]);
     b.push(["[my_company_logo]","My Company Logo","Company Logo"]);
-    b.push(["[my_company_office_name]","My Office Name","Office Name"]);
     b.push(["[my_city]","My City",""]);
     b.push(["[my_state]","My State",""]);
     b.push(["[my_zip]","My Zip",""]);
     b.push(["[my_email]","My Email",""]);
-    b.push(["[my_home_phone]","My Home Phone",""]);
-    b.push(["[my_work_phone]","My Work Phone",""]);
     b.push(["[my_mobile_phone]","My Mobile Phone",""]);
     b.push(["[my_picture]","My Picture",""]);
     b.push(["[my_signature]","My Signature",""]);
