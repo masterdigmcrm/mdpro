@@ -17,7 +17,7 @@ class LeadCollection extends LeadEntity{
         $this->order_direction = $r->order_direction ? $r->order_direction :  'DESC';
         $assigned_to = $r->assigned_to;
 
-        $fields = [ 'l.*' , 's.status', 't.type', 'so.source' ];
+        $fields = [ 'l.*' , 's.statusid',  's.status', 't.type', 'so.source' ];
 
         $query = static::from( $this->table.' as l' )
             ->leftjoin( 'jos_mdigm_lead_status as s', 's.statusid' , 'l.status' )
@@ -26,7 +26,8 @@ class LeadCollection extends LeadEntity{
 
         if( $r->primaryKeyValue ){
             $query->where( $this->primaryKey , $r->primaryKeyValue );
-            return $query->first( $fields );
+            return $query->firstOrFail( $fields );
+
         }
 
         $query->where( function( $query ) use( $assigned_to ) {

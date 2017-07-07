@@ -3,7 +3,7 @@ var mVue = new Vue({
     data:{
         campaign:{ actions: [] , trigger:{} },
         campaigns:[],
-        action:{},
+        action:{ action_typeid : 0 , sending_delay : 0 , sending_month : '00' , sending_day: '00', sending_year: '0000' },
         actions:[],
         action_message: '',
         action_typeid : '1',
@@ -132,6 +132,14 @@ var mVue = new Vue({
             CKEDITOR.instances['editor1'].setData('');
             $('#subject').val( '' );
         },
+        editAction( actionid ){
+            this.action = $.grep( this.campaign.actions , function( a ){
+                return a.actionid == actionid;
+            })[0];
+            this.getPostcards();
+            CKEDITOR.instances['editor1'].setData( this.action.message );
+            $('#editActionModal').modal();
+        },
         saveAction( e ){
             let vm = this;
             this.action_message = CKEDITOR.instances.editor1.getData();
@@ -209,21 +217,27 @@ var mVue = new Vue({
             })
         },
         actionDelaySelected( e ){
-            if( $(e.target).val() == -1 ){
-                this.action_sending_delay = -1;
-            }else{
-                this.action_sending_delay = 0;
-            }
+            this.action.sending_delay = $(e.target).val();
         },
-        actionTypeSelected(){
+        actionTypeSelected( e ){
+            let typeid = $(e.target ).val();
             if( this.postcards.length == 0 ){
                 this.getPostcards();
             }
+
+            this.action.action_typeid = typeid;
+
         },
         campaignActions(){
             return $.grep( this.campaign.actions, function( a ){
                 return a.deleted == 0;
             });
+        },
+        previewPostcard( postcard_id ){
+            this.postcard = $.grep( this.postcards , function(p){
+                return p.postcard_id == postcard_id;
+            })[0];
+            $('#postcardModal' ).modal()
         }
     },
     computed:{

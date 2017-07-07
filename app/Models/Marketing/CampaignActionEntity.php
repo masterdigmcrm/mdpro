@@ -17,6 +17,8 @@ class CampaignActionEntity extends BaseModel{
 
     public $timestamps = false;
 
+    public $appends = [ 'type','delay' , 'sending_day', 'sending_month', 'sending_year' ];
+
     protected $fillable = [ 'campaignid', 'ownerid', 'subject' , 'message', 'message_format' ,
         'sending_delay', 'sending_specific_datetime', 'sending_type', 'sending_field',
         'is_public', 'published' , 'templateid' , 'attachment',
@@ -46,12 +48,13 @@ class CampaignActionEntity extends BaseModel{
             $this->postcard_id = $r->postcard_id;
         }
 
+        $this->sending_specific_datetime = $this->sending_delay == -1 ? $r->send_year.'-'.$r->send_month.'-'.$r->send_day.' 00:00:00' : null;
+
         if( $r->$pk  ){
             $this->exists = true;
         }else{
             $this->sending_delay    = $this->sending_delay == -1 ? 0 : $this->sending_delay;
             $this->sending_type     = 'date_entered';
-            $this->sending_specific_datetime = $this->sending_delay == -1 ? $r->send_year.'-'.$r->send_month.'-'.$r->send_day.' 00:00:00' : '1990-01-01 00:00:00';
             $this->date_created     = date( 'Y-m-d H:i:s' );
             $this->params           =  ' ';
             //$this->template_name    = $this->template_name ? $this->template_name : ' ';
@@ -62,6 +65,68 @@ class CampaignActionEntity extends BaseModel{
 
         return $this;
     }
+
+    public function getTypeAttribute()
+    {
+        $types = [
+            1=>  'Email' , 2=> 'To do',
+            3=>  'Letter' , 4 => 'One Off', 5 => 'Newsletter',
+            6 => 'Postcard'
+        ];
+
+        return isset( $types[$this->action_typeid] ) ? $types[$this->action_typeid] : '';
+    }
+
+    public function getSendingDelayAttribute( $value )
+    {
+        if( $this->sending_specific_datetime  && ! in_array( $this->sending_specific_datetime  , ['0000-00-00 00:00:00' , '1990-01-01 00:00:00'] ) ){
+            return -1;
+        }
+
+        return  $value;
+    }
+
+    public function getSendingDayAttribute()
+    {
+        if( ! $this->sending_specific_datetime){
+            return '00';
+        }
+        return date('d' , strtotime($this-> sending_specific_datetime ));
+    }
+
+    public function getSendingMonthAttribute()
+    {
+        if( ! $this->sending_specific_datetime){
+            return '00';
+        }
+        return date('m' , strtotime($this-> sending_specific_datetime ));
+    }
+
+    public function getSendingYearAttribute(){
+        if( ! $this->sending_specific_datetime){
+            return '00';
+        }
+        return date('Y' , strtotime($this-> sending_specific_datetime ));
+    }
+
+    public function getDelayAttribute()
+    {
+        if( $this->sending_delay == 0 ){
+            return 'Same Day';
+        }
+        if( $this->sending_delay > 0 ){
+            return 'After '.$this->sending_delay.' days ';
+        }
+        if( $this->sending_delay == -1  ){
+            return $this->sending_specific_datetime;
+        }
+    }
+
+    public function getMergedSubject()
+    {
+        return $this->merged_subject;
+    }
+
 
     public function mergeMessage( $leadid )
     {
@@ -294,10 +359,6 @@ class CampaignActionEntity extends BaseModel{
 
         return $this->merged_message;
     }
-
-    public function getMergedSubject()
-    {
-        return $this->merged_subject;
-    }
+    
 
 }

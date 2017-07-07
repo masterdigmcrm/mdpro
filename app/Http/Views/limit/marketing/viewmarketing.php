@@ -41,16 +41,26 @@
                                 <div class="panel-body">
                                     <div>
                                         <table class="table table-striped">
+                                            <tr>
+                                                <th> Action Name</th>
+                                                <th> Type </th>
+                                                <th> Sending Date </th>
+
+                                                <th></th>
+                                            </tr>
+
                                             <tr v-for="c in campaign.actions" v-show="campaign.actions.length">
                                                 <td>{{ c.subject }}</td>
+                                                <td>{{ c.type }}</td>
+                                                <td>{{ c.delay }}</td>
                                                 <td>
                                                     <ul class="icons-list">
                                                         <li class="dropdown">
                                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-menu7"></i></a>
                                                             <ul class="dropdown-menu dropdown-menu-right">
-                                                                <!--<li><a href="javascript:"><i class="icon-file-text2"></i> Edit Action</a></li>-->
+                                                                <li><a href="javascript:" @click="editAction( c.actionid )"><i class="icon-pencil3"></i> Edit Action</a></li>
                                                                 <li>
-                                                                    <a href="javascript:" @click="deleteAction(c.actionid)"><i class="icon-delete"></i> Delete Action</a>
+                                                                    <a href="javascript:" @click="deleteAction( c.actionid )"><i class="icon-cross2 text-danger"></i> Delete Action</a>
                                                                 </li>
                                                             </ul>
                                                         </li>
@@ -58,7 +68,7 @@
                                                 </td>
                                             </tr>
                                             <tr v-show="!campaign.actions.length">
-                                                <td colspan="2"> No action found </td>
+                                                <td colspan="4"> No action found </td>
                                             </tr>
                                         </table>
                                     </div>
@@ -142,9 +152,35 @@
             </div>
         </div>
     </div>
-
     <?php echo view( 'marketing.partials.edit_action_modal' ) ?>
 
+    <div id="postcardModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><b>Postcard Preview</b></h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <h6><b>Front</b></h6>
+                        <div class="col-lg-12">
+                            <img src="" class="img-responsive" :src="postcard.front" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h6><b>Back</b></h6>
+                        <div class="col-lg-12">
+                            <img src="" class="img-responsive" :src="postcard.back" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script>
     // Replace the <textarea id="editor1"> with a CKEditor

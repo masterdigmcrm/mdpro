@@ -11,11 +11,11 @@
                         <div class="col-lg-6">
                             <div class="form-group">
                                 <label for="subject">Subject</label>
-                                <input type="text" name="subject" value="" id="subject" class="form-control" />
+                                <input type="text" name="subject" value="" id="subject" class="form-control" v-model="action.subject" />
                             </div>
                             <div class="form-group">
                                 <label for="type">Action Type</label>
-                                <select name="action_typeid" class="form-control" v-model="action_typeid" @change="actionTypeSelected">
+                                <select name="action_typeid" class="form-control" @change="actionTypeSelected" v-model="action.action_typeid">
                                     <option value="1" > Email </option>
                                     <option value="3" > Letter </option>
                                     <option value="6" > Postcard </option>
@@ -28,7 +28,7 @@
                                     <div class="row">
                                         <div class="form-group">
                                             <label> Send After / On </label>
-                                            <select name="sending_delay" class="form-control" @change="actionDelaySelected">
+                                            <select name="sending_delay" class="form-control" v-model="action.sending_delay" @change="actionDelaySelected">
                                                 <option value="0"> Same Day </option>
                                                 <option value="-1"> Specific Date </option>
                                                 <option value="" v-for="n in 30" :value="n"> {{n}} Days </option>
@@ -39,9 +39,9 @@
                                             </select>
                                         </div>
                                         <div class="row">
-                                            <div v-show="action_sending_delay == -1">
+                                            <div v-show="action.sending_delay == -1">
                                                 <div class="col-lg-4">
-                                                    <select name="send_month" class="form-control" style="display: inline-table;">
+                                                    <select name="send_month" class="form-control" style="display: inline-table;"  v-model="action.sending_month">
                                                         <option value="00">Month</option>
                                                         <option value="01">January</option>
                                                         <option value="02">February</option>
@@ -58,17 +58,17 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-lg-4">
-                                                    <select name="send_day" class="form-control form-inline">
+                                                    <select name="send_day" class="form-control form-inline" v-model="action.sending_day">
                                                         <option value="00">Day</option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="5">5</option>
-                                                        <option value="6">6</option>
-                                                        <option value="7">7</option>
-                                                        <option value="8">8</option>
-                                                        <option value="9">9</option>
+                                                        <option value="01">1</option>
+                                                        <option value="02">2</option>
+                                                        <option value="03">3</option>
+                                                        <option value="04">4</option>
+                                                        <option value="05">5</option>
+                                                        <option value="06">6</option>
+                                                        <option value="07">7</option>
+                                                        <option value="08">8</option>
+                                                        <option value="09">9</option>
                                                         <option value="10">10</option>
                                                         <option value="11">11</option>
                                                         <option value="12">12</option>
@@ -94,8 +94,9 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-lg-4">
-                                                    <select name="send_year" class="form-control form-inline">
+                                                    <select name="send_year" class="form-control form-inline" v-model="action.sending_year">
                                                         <option value="0000">Year</option>
+                                                        <option value="" :value="action.sending_year">{{action.sending_year}}</option>
                                                         <option value="2017">2017</option>
                                                         <option value="2018">2018</option>
                                                         <option value="2019">2019</option>
@@ -116,10 +117,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" v-show = "action_typeid == 1 || action_typeid == 3">
+                    <div class="row" v-show = "action.action_typeid == 1 || action.action_typeid == 3">
                         <textarea name="editor1" id="editor1" rows="10" cols="80"></textarea>
                     </div>
-                    <div v-show="action_typeid == 6">
+                    <div v-show="action.action_typeid == 6">
                         <h5> <b>Choose A Postcard</b></h5>
                         <table class="table table-striped">
                             <tr v-for="p in postcards">
@@ -127,9 +128,11 @@
                                     <input type="radio" name="postcard_id" value="" :value="p.postcard_id" v-model="postcard_id"/>
                                 </td>
                                 <td>{{ p.postcard_name }}</td>
+                                <td style="width:160px"><img src="" class="img-responsive" :src="p.front" /></td>
+                                <td style="width:160px"><img src="" class="img-responsive" :src="p.back" /></td>
                                 <td>
                                     <div class="pull-right">
-                                        <a href="javascript:" class="btn btn-success"> Preview </a>
+                                        <a href="javascript:" class="btn btn-success" @click="previewPostcard(p.postcard_id)"> Preview </a>
                                     </div>
                                 </td>
                             </tr>
@@ -145,6 +148,7 @@
                 <?php echo csrf_field() ?>
                 <input type="hidden" name="campaignid" id="campaignid" value="" v-model="campaign.campaignid"/>
                 <input type="hidden" name="template_name" id="template_name" value="" />
+                <input type="hidden" name="actionid" id="actionid" value=""v-model="action.actionid" />
                 <input type="hidden" name="message" id="message" value=""  />
             </form>
             <div class="modal-footer">

@@ -32,8 +32,8 @@ class MarketingAjaxController extends Controller
             'with_actions' => true , 'with_trigger' => true,
             'order_by' => 'campaign_name'] );
 
-        $lead_types     =  ( new LeadTypes() )->getCollection( $r );;
-        $lead_status    = ( new LeadStatusMap )->getCollection( $r );;
+        $lead_types     =  ( new LeadTypes() )->getCollection( $r );
+        $lead_status    = ( new LeadStatusMap )->getCollection( $r );
 
         return [
             'success' =>true,

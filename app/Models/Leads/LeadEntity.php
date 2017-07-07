@@ -48,7 +48,9 @@ class LeadEntity extends BaseModel{
             $this->converted = 0;
         }
 
-        $this->assigned_to = $r->assigned_to ? $r->assigned_to : AccountEntity::me()->userid;
+        $this->assigned_to = $r->assigned_to ? $r->assigned_to : $r->user()->id;
+        $this->ownerid = AccountEntity::me()->userid;
+
         $this->save();
 
         return $this;

@@ -39,6 +39,7 @@ class AjaxLeadsController{
 
     public function saveLead( Request $r )
     {
+
         $lead = new LeadEntity();
         if( ! $lead->store( $r ) ){
             return [
@@ -51,6 +52,10 @@ class AjaxLeadsController{
         // get all marketing campaigns that match lead credentials
 
         $campaigns = (new CampaignCollection)->getByLeadCredentials( $lead );
+
+        $r->merge( ['primaryKeyValue' => $lead->leadid , 'assigned_to' => $lead->assigned_to  ] );
+        $lead = ( new LeadCollection )->getCollection( $r );
+
 
         return [
             'success' => true,
