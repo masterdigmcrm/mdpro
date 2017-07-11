@@ -19,7 +19,7 @@ class CampaignActionEntity extends BaseModel{
 
     public $appends = [ 'type','delay' , 'sending_day', 'sending_month', 'sending_year' ];
 
-    protected $fillable = [ 'campaignid', 'ownerid', 'subject' , 'message', 'message_format' ,
+    protected $fillable = [ 'actionid','campaignid', 'ownerid', 'subject' , 'message', 'message_format' ,
         'sending_delay', 'sending_specific_datetime', 'sending_type', 'sending_field',
         'is_public', 'published' , 'templateid' , 'attachment',
         'auto_cancel','action_typeid'

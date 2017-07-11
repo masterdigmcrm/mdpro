@@ -121,6 +121,9 @@
                         <textarea name="editor1" id="editor1" rows="10" cols="80"></textarea>
                     </div>
                     <div v-show="action.action_typeid == 6">
+                        <div class="pull-right">
+
+                        </div>
                         <h5> <b>Choose A Postcard</b></h5>
                         <table class="table table-striped">
                             <tr v-for="p in postcards">
@@ -143,6 +146,9 @@
                         <div v-show="loading_postcards">
                             <i class="icon-spinner2 spinner"></i> Loading postcards
                         </div>
+                    </div>
+                    <div>
+
                     </div>
                 </div>
                 <?php echo csrf_field() ?>

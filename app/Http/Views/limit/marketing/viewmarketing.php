@@ -49,7 +49,7 @@
                                                 <th></th>
                                             </tr>
 
-                                            <tr v-for="c in campaign.actions" v-show="campaign.actions.length">
+                                            <tr v-for="c in sortedActions" v-show="campaign.actions.length">
                                                 <td>{{ c.subject }}</td>
                                                 <td>{{ c.type }}</td>
                                                 <td>{{ c.delay }}</td>

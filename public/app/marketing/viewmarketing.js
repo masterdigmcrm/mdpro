@@ -163,7 +163,20 @@ var mVue = new Vue({
             $.post( '/ajax/campaign/action' , $('#actionForm').serialize() )
             .done(function( data ){
                 if( data.success ){
-                    vm.campaign.actions.push( data.action );
+                    let is_new = true;
+                    for( i=0; i < vm.campaign.actions.length; i++ ){
+                        d = vm.campaign.actions[i];
+                        if( d.actionid == data.action.actionid  ){
+                            is_new = false;
+                            Vue.set( vm.campaign.actions , i , data.action );
+                            break;
+                        }
+                    }
+
+                    if( is_new ){
+                        vm.campaign.actions.push( data.action );
+                    }
+
                     toastr.success( 'Action successfully saved' );
                     $('#editActionModal').modal( 'toggle' );
                 }else{
@@ -243,6 +256,9 @@ var mVue = new Vue({
     computed:{
         sortedCampaigns(){
 
+        },
+        sortedActions(){
+            return _.sortBy( this.campaign.actions , function( a ){ return a.sending_delay } );
         }
     },
     mounted:function(){

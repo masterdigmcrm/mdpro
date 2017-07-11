@@ -23,9 +23,8 @@ class MarketingController extends ComponentsBaseController{
         $account = AccountEntity::me();
 
         $this->layout->content = view( 'marketing.viewmarketing' , compact( 'account' ) );
-
-        Layout::instance()->addScript( '/app/marketing/viewmarketing.js' );
         Layout::loadlodash();
+        Layout::instance()->addScript( '/app/marketing/viewmarketing.js' );
         Layout::loadCkeditor();
 
         return $this->layout;
