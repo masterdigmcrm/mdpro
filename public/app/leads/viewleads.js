@@ -65,10 +65,23 @@ var leadsVue = new Vue({
                         if(data.success){
                             toastr.success( 'Lead successfully saved' );
                             //vm.lead = data.lead;
+                            var is_new = true;
+                            for( i=0; i < vm.leads.length; i++ ){
+                                d = vm.leads[i];
+                                if( d.leadid == data.lead.leadid ){
+                                    Vue.set( vm.leads , i , data.lead );
+                                    is_new = false; break;
+                                }
+                            }
+                            if( is_new ){
+                                vm.leads.push( data.lead );
+                            }
                             if( data.campaigns.length ){
                                 vm.lead = data.lead;
                                 vm.lead_campaigns = data.campaigns;
                                 $('#leadCampaignModal').modal();
+                            }else{
+                                vm.openList();
                             }
                         }else{
                             toastr.error( data.message );
@@ -80,8 +93,7 @@ var leadsVue = new Vue({
                         $('.btn').prop( 'disabled' , false );
                         $(e.target).html( 'Save');
                     }
-                })
-                .error(function( data ){
+                }).error(function( data ){
                     toastr.error('Something went wrong');
                     $('.btn').prop( 'disabled' , false );
                     $(e.target).html( 'Save');
@@ -90,7 +102,6 @@ var leadsVue = new Vue({
         },
         editlead( lid ){
             this.lead = {};
-
             var arr = $.grep( this.leads , function( lead ){
                 return lead.leadid == lid;
             });
@@ -127,6 +138,28 @@ var leadsVue = new Vue({
             }
 
         },
+        /*** campaigns   ****/
+        openCampaignListModal( leadid ){
+            let vm = this;
+            vm.lead_campaigns = [];
+
+            this.lead = $.grep( this.leads , function( l ){
+                return l.leadid == leadid;
+            })[0];
+
+            $.get("/ajax/lead/campaigns" , {leadid:leadid} )
+            .done(function( data ){
+                if( data.success){
+                    vm.lead_campaigns = data.campaigns;
+                }else{
+                    toastr.error( data.message );
+                }
+            })
+            .error(function( data ){
+                toastr.error('Something went wrong');
+            });
+            $('#leadCampaignModal').modal();
+        },
         addLeadToCampaign(e){
             let vm = this;
             let h = $(e.target).html();
@@ -140,6 +173,7 @@ var leadsVue = new Vue({
                     $('#leadCampaignModal').modal( 'toggle' );
                     $('.btn').prop( 'disabled' , false );
                     $(e.target).html( h );
+                    vm.openList();
                 }else{
                     toastr.error( data.message );
                     $('.btn').prop( 'disabled' , false );
@@ -813,6 +847,9 @@ var leadsVue = new Vue({
         },
         sortedGroups(){
 
+        },
+        sortedLeads(){
+           return  _.orderBy( this.leads, [ 'date_entered' ], [ 'desc' ] );
         }
 
     }

@@ -23,6 +23,7 @@ class LeadsController extends ComponentsBaseController{
         $leads = LeadCollection::getByUserId( $r->user()->id );
         $account = AccountEntity::me();
 
+        Layout::loadlodash();
         $this->layout->content = view( 'leads.viewleads' , compact( 'account' ) );
         Layout::instance()->addScript( '/app/leads/viewleads.js' );
         Layout::loadBlockUI();

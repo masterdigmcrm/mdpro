@@ -51,12 +51,9 @@
                                             <a href="javascript:" class="add-postcard"  v-on:click="selectPostcard"><?php echo trans('leads.send postcard') ?></a>
                                         </li>
                                         -->
-                                        <li>
-                                            <a href="javascript:" class="add-bucket"  v-on:click="addToGroup()"><?php echo trans('leads.add to group') ?></a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:" class="delete_leads"  v-on:click="deleteLeads()"> <?php echo trans('leads.delete leads') ?> </a>
-                                        </li>
+                                        <li><a href="javascript:" class="add-bucket"  v-on:click="addToGroup()"><?php echo trans('leads.add to group') ?></a></li>
+                                        <li><a href="javascript:" class="delete_leads"  v-on:click="deleteLeads()"> <?php echo trans('leads.delete leads') ?> </a></li>
+
                                         <li>
                                             Options
                                         </li>
@@ -82,7 +79,7 @@
                             </td>
                         </tr>
                         <tbody>
-                            <tr v-for="(lead , index) in leads">
+                            <tr v-for="(lead , index) in sortedLeads">
                             <td>
                                 <label>
                                     <input type="checkbox" class="checkbox-master cb" name="cb[]" value="" :value="lead.leadid" />
@@ -109,6 +106,9 @@
                                             <a href="javascript:" class="add-note"  v-on:click="editnote(-1 , lead.leadid)">
                                                 <i class="icon-pencil7"></i> <?php echo trans('leads.add notes') ?>
                                             </a>
+                                        </li>
+                                        <li><a href="javascript:" class="add_campaign"  v-on:click="openCampaignListModal( lead.leadid )">
+                                                <i class="icon-envelop3"></i> Add to Campaign </a>
                                         </li>
 
                                         <li class="divider">

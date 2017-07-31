@@ -26,8 +26,11 @@ class LeadCollection extends LeadEntity{
 
         if( $r->primaryKeyValue ){
             $query->where( $this->primaryKey , $r->primaryKeyValue );
-            return $query->firstOrFail( $fields );
+            if( ! $lead =  $query->first( $fields ) ){
+                return false;
+            }
 
+            return $lead->vuefy();
         }
 
         $query->where( function( $query ) use( $assigned_to ) {

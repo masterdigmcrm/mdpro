@@ -27,9 +27,10 @@ class AjaxLeadsController{
 
     public function getLeads( Request $r )
     {
-        
+
         $leads = new LeadCollection();
         $r->request->add([ 'assigned_to' => $r->user()->id ]);
+
         return [
             'success' => true,
             'leads' => $leads->getCollection( $r ),
@@ -56,10 +57,19 @@ class AjaxLeadsController{
         $r->merge( ['primaryKeyValue' => $lead->leadid , 'assigned_to' => $lead->assigned_to  ] );
         $lead = ( new LeadCollection )->getCollection( $r );
 
-
         return [
             'success' => true,
             'lead' => $lead,
+            'campaigns' => $campaigns
+        ];
+    }
+    
+    public function getLeadCampaigns( Request $r )
+    {
+        $lead = LeadEntity::find( $r->leadid );
+        $campaigns = (new CampaignCollection)->getByLeadCredentials( $lead );
+        return [
+            'success' =>true ,
             'campaigns' => $campaigns
         ];
     }

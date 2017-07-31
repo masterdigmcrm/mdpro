@@ -40,6 +40,7 @@ if( \Request::segment(2) == 'lead'){
     Route::group( [ 'prefix' => 'lead', 'namespace' => 'Components\Leads' ], function(){
         Route::post( 'addtocampaigns' , 'AjaxLeadsController@addLeadToCampaigns' );
         Route::post( 'groups/campaigns' , 'AjaxLeadsController@addLeadGroupsToCampaigns' );
+        Route::get( 'campaigns' , 'AjaxLeadsController@getLeadCampaigns' );
     });
 }
 
@@ -56,6 +57,7 @@ if( \Request::segment(2) == 'leads'){
         Route::get( 'search' , 'AjaxLeadsController@getLeads' );
         Route::get( 'summary' , 'AjaxLeadsController@summary' );
         Route::get( 'init' , 'AjaxLeadsController@init' );
+
         // get group members
         Route::get( 'ggm' , 'AjaxLeadsController@getGroupMembers' );
         Route::post( 'save/group' , 'AjaxLeadsController@saveGroup' );

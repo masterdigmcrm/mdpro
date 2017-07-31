@@ -20,6 +20,7 @@ class LeadEntity extends BaseModel{
         'assigned_to', 'company', 'company_position','brokerid', 'ownerid'
     ];
 
+
     public function store( Request $r )
     {
         $validator = \Validator::make( $r->all() , [
