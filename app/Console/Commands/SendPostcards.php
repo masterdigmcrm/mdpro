@@ -179,10 +179,10 @@ class SendPostcards extends Command
         }
 
         if( ! $state = $this->getState( $lead ) ){
-            $this->error_message = 'Empty street address';
+            $this->error_message = 'Empty state address';
             return false;
         }
-        
+
         return [
             'name' => $lead->first_name.' '.$lead->last_name,
             'address_line1' =>  $lead->primary_address_street ,

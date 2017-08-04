@@ -79,7 +79,7 @@ class ActionTriggerMap extends BaseModel{
     {
 
         $this->setLpo( $r );
-        $this->fields = [ 'm.*' , 'l.assigned_to' , 'l.ownerid' , 'l.first_name', 'l.last_name',
+        $this->fields = [ 'm.*' , 'l.assigned_to' , 'l.ownerid' , 'l.first_name', 'l.last_name', 'l.stateid',
             'l.primary_address_street' ,'l.primary_address_city' ,'l.primary_address_state', 'l.primary_address_country', 'l.primary_address_postalcode',
             'a.postcard_id' ];
 

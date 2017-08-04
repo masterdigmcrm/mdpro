@@ -178,7 +178,7 @@ class SendLetters extends Command
         }
 
         if( ! $state = $this->getState( $lead ) ){
-            $this->error_message = 'Empty street address';
+            $this->error_message = 'Empty state address';
             return false;
         }
 
