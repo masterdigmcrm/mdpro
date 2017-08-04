@@ -177,16 +177,9 @@ class SendLetters extends Command
             return false;
         }
 
-        $state = $lead->primary_address_state;
-
-        if( strlen( $state ) > 2 ){
-            if(  $state_obj = States::getAbbr( $state ) ) {
-                $state = $state_obj->stateid;
-            }else{
-                $this->error_message = 'Empty street address';
-                return false;
-            }
-
+        if( ! $state = $this->getState( $lead ) ){
+            $this->error_message = 'Empty street address';
+            return false;
         }
 
         return [
@@ -205,6 +198,40 @@ class SendLetters extends Command
         
         $ps     =   $lobapi->sendMarketingLetters( $message , $to_address , $from_address );
         return $ps;
+    }
+
+    private function getState( $lead )
+    {
+        if( $lead->stateid ){
+            $state = States::find( $lead->stateid );
+            if( strlen( $state->stateid ) == 2 ){
+                return $state->stateid;
+            }
+        }
+
+        $state = $lead->primary_address_state ;
+
+        if( strlen( $state ) == 2 ){
+            return $state;
+        }else{
+
+            if(  $state_obj = States::getAbbr( $state ) ) {
+                $state = $state_obj->stateid;
+
+                if( strlen( $state ) == 2 ){
+                    return $state;
+                }
+
+                return false;
+            }else{
+
+                return false;
+
+            }
+
+        }
+
+
     }
 
 }
