@@ -138,14 +138,12 @@ class SendPostcards extends Command
     private function accountAddress( $user_map )
     {
         if( $user_map->broker_userid == $user_map->userid ){
-
-
             $name       = $user_map->br_firstname.' '.$user_map->br_lastname;
             $address    = $user_map->br_address;
             $city       = $user_map->br_city;
             $s  = States::where( 'id' , $user_map->stateid )->first();
             $state      = $s ? $s->stateid : 'CA';
-            $postal_code = $user_map->zip;
+            $postal_code = $user_map->br_zip;
         }else{
 
             $name       = $user_map->contact_firstname.' '.$user_map->contact_lastname;
