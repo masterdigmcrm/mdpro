@@ -182,17 +182,7 @@ class SendPostcards extends Command
             $this->error_message = 'Empty street address';
             return false;
         }
-
-        if( strlen( $state ) > 2 ){
-            if(  $state_obj = States::getAbbr( $state ) ) {
-                $state = $state_obj->stateid;
-            }else{
-                $this->error_message = 'Empty street address';
-                return false;
-            }
-
-        }
-
+        
         return [
             'name' => $lead->first_name.' '.$lead->last_name,
             'address_line1' =>  $lead->primary_address_street ,
