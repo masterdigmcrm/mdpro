@@ -52,21 +52,27 @@ class ImageHelper {
         if( ! is_dir( $thumb_directory ) ){
             mkdir( $thumb_directory , 755 , true );
         }
-        //checks and resizes images that are bigger than 600 in height
 
-        if( $height > 600 ){
-            $image->resize( null , 600 ,
-                function( $constraint ){
-                    $constraint->aspectRatio();
-                }
-            )->save( $photo_path , 80 );
-        }elseif( $width > 800 ){
-            $image->resize( 800 , null,
-                function( $constraint ){
-                    $constraint->aspectRatio();
-                }
-            )->save( $photo_path , 80 );
+        //checks and resizes images that are bigger than 600 in height
+        if( isset( $options['disable_resize'] )  && $options['disable_resize'] ) {
+            // do nothing for now
+        }else{
+
+            if( $height > 600 ){
+                $image->resize( null , 600 ,
+                    function( $constraint ){
+                        $constraint->aspectRatio();
+                    }
+                )->save( $photo_path , 80 );
+            }elseif( $width > 800 ){
+                $image->resize( 800 , null,
+                    function( $constraint ){
+                        $constraint->aspectRatio();
+                    }
+                )->save( $photo_path , 80 );
+            }
         }
+
 
         //$url 	= 	\Image::pathToUrl( $photo_directory );
         //$photos['default'] = $url.$filename;

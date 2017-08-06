@@ -107,7 +107,7 @@ class PostcardEntity extends BaseModel{
             return false;
         }
 
-        ImageHelper::generateThumbNails( $file_path , [] , $image  );
+        ImageHelper::generateThumbNails( $file_path , [ 'disable_resize' => true ] , $image  );
 
         $section = $r->section;
         $this->$section = $url;
