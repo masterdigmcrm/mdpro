@@ -35,6 +35,9 @@ class AjaxLeadsController{
             'success' => true,
             'leads' => $leads->getCollection( $r ),
             'total' => $leads->getTotal(),
+            'offset' => $leads->getOffset(),
+            'limit' => $leads->getLimit(),
+            'page_count' => $leads->getPageCount( true )
         ];
     }
 

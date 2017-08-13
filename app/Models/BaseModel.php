@@ -8,13 +8,13 @@ use Illuminate\Http\Request;
 
 class BaseModel extends Model
 {
-    protected $total     = 0;
-    protected $pages     = 1;
-    protected $page      = 1; // current_page
-    protected $limit     = 20;
-    protected $offset = 0;
-    protected $errors    = [];
-    protected $collection    = null;
+    protected $total        =   0;
+    protected $pages        =   1;
+    protected $page         =   1; // current_page
+    protected $limit        =   20;
+    protected $offset       =   0;
+    protected $errors       =   [];
+    protected $collection   =   null;
     protected $request;
 
     public $error_code;
@@ -57,48 +57,30 @@ class BaseModel extends Model
         if( ! $this->total ){
             return 0;
         }
+        // page count
         $count =  ceil( $this->total / $this->limit   );
 
         // used to return a list of pages for pagination
-
         if( $return_array ){
 
             $_arr = [];
-            if( $count > 16 ){
-                // first four
-                for( $i = 1 ; $i <= 4; $i++ ){
+
+            if( $count < 6 ){
+                for( $i = 1 ; $i <= $count; $i++  ){
                     $_arr[] = $i;
                 }
+                return $_arr;
+            }
 
-                // middle four
-                $middle_four = $this->page - 2;
+            if( $count > 6 ){
 
-                if( $this->page > 4 ){
-                    $_arr[] = '...';
-                }
+                $start  =   $this->page - 3;
+                $start  =  ( $start < 1 )  ? 1 : $start;
 
-                for( $i = $middle_four ; $i <= ( $middle_four + 4 ) ; $i++ ){
-                    if( $i >= 1 && ! in_array( $i, $_arr )  && $i <= $count - 4 ){
-                        $_arr[] = $i;
-                    }
-                }
+                $end    = $this->page + 3;
+                $end    = $end > $count ? $count : $end;
 
-                if( $this->page < ( $count - 4 ) ){
-                    $_arr[] = '...';
-                }
-
-                // last four
-                $last_four = $count - 3;
-
-                for( $i = $last_four ; $i <= $count; $i++ ){
-                    if( ! in_array( $i, $_arr ) && $i <= $count ){
-                        $_arr[] = $i;
-                    }
-                }
-
-
-            }else{
-                for( $i = 1 ; $i <= $count ; $i++ ){
+                for( $i = $start ; $i <= $end; $i++  ){
                     $_arr[] = $i;
                 }
             }
@@ -189,10 +171,10 @@ class BaseModel extends Model
     public function getPaginationData()
     {
         return [
-            'page_count' => $this->getPageCount(),
-            'current_page' => $this->getCurrentPage(),
-            'total' => $this->getTotal(),
-            'limit' => $this->getLimit()
+            'page_count'    =>  $this->getPageCount(),
+            'current_page'  =>  $this->getCurrentPage(),
+            'total'     =>  $this->getTotal(),
+            'limit'     =>  $this->getLimit()
         ];
     }
 

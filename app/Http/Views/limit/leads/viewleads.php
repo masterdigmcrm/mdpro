@@ -5,7 +5,7 @@
                 <?php echo view('leads.modals.advanced_search')
                     ->with( 'account' , $account )
                     ->render(); ?>
-                <input type="hidden" name="page" id="page" value="1" />
+                <input type="hidden" name="page" id="page" value="1" v-model="page"/>
                 <div class="col-lg-12">
                     <header id="header-sec">
                         <div class="col-lg-6 col-md-12">
@@ -31,11 +31,28 @@
                                 <label><input type="checkbox" class="" id="cb-toggle"/><span></span></label>
                             </th>
                             <th scope="col">
-                                <span style="font-weight:normal"> {{ displayed_lead_count }} of {{ lead_count}} </span>
-                                <a id="show-more" href="javascript:;" v-on:click="showMoreLeads()" class="btn btn-sm btn-success hide show-more">
-                                    More
-                                </a>
-                                <div class="btn-group pull-right">
+                                <div class="col-lg-8">
+                                    <ul class="pagination">
+                                        <li>
+                                            <a href="javascript:" aria-label="Previous" @click="prev()">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li class="" v-for="p in page_count" :class="p==page ? 'active' : '' ">
+                                            <a href="javascript:" @click="goToPage(p)">{{p}}</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:" aria-label="Next" @click="next()">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <br />
+                                <span v-show="!loading" style="font-weight:normal"> &nbsp;&nbsp;&nbsp; {{ displayed_lead_count }} of {{ lead_count}} </span>
+
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="btn-group pull-right">
                                     <a href="javascript:" class="btn btn-primary btn-sm add-new" @click="editlead( 0 )"> <i class="fa fa-plus"></i> <?php echo trans('leads.add new') ?> </a>
 
                                     <button type="button" class="btn btn-sm btn-default btn-fit-height dropdown-toggle"
@@ -68,15 +85,15 @@
                                         </li>
                                     </ul>
                                 </div>
+                                </div>
                             </th>
                         </tr>
                         </thead>
-                        <tr v-show="!leads.length">
+                        <tr class="loader" v-show="loading">
                             <td colspan="2">
-                                <div id="loader">
-                                    No leads found
-                                </div>
+                                <i class="icon-spinner2 spinner"></i> <b>Searching leads...</b>
                             </td>
+
                         </tr>
                         <tbody>
                             <tr v-for="(lead , index) in sortedLeads">
@@ -127,6 +144,9 @@
                         </tbody>
                     </table>
 
+                    <div v-show="!loading && !leads.length">
+                        No leads found
+                    </div>
                 </div>
             </form>
         </div>

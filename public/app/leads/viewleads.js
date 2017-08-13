@@ -8,16 +8,20 @@ $(document).ready(
 var leadsVue = new Vue({
     el: '#leads_div',
     data:{
-        lead:{},
+        lead:   {},
         lead_count:0,
-        page:1,
-        notes:[],
-        leads:[],
-        lead_status:[],
-        lead_types:[],
-        lead_sources:[],
-        lead_campaigns:[],
-        todos:[],
+        page:   1,
+        page_count:[],
+        offset: 1,
+        limit:  20,
+
+        notes:  [],
+        leads:  [],
+        lead_status:    [],
+        lead_types:     [],
+        lead_sources:   [],
+        lead_campaigns: [],
+        todos:  [],
         campaigns:[],
         postcard_leads:[],
         addEditNote:'Add',
@@ -30,7 +34,8 @@ var leadsVue = new Vue({
         cities:[],
         countries:[],
 
-        loading_members : false
+        loading_members : false,
+        loading:false // loading leads
     },
     mounted:function(){
         $('#cb-toggle').prop('checked', false);
@@ -42,16 +47,28 @@ var leadsVue = new Vue({
     methods:{
         getLeads:function(){
             let vm = this;
-            $('#loader').html( '<i class="fa fa-spin fa-refresh"></i> Searching leads ' );
-            $.get('/ajax/leads/getleads' , $('#leadsForm').serialize() )
+            this.loading = true;
+            this.leads = [];
+            $.get('/ajax/leads/getleads', $('#leadsForm').serialize() )
             .done(function( data ){
                 if( data.success ){
                     vm.leads = data.leads;
                     vm.lead_count = data.total;
+                    vm.offset   = data.offset;
+                    vm.limit    = data.limit;
+
+                    l = vm.page_count.length - 1;
+
+                    if( vm.page == vm.page_count[0] || vm.page == vm.page_count[ l ] || vm.page == 1 ){
+                        vm.page_count = data.page_count;
+                    }
+
                 }else{
                     toastr.error( data.message );
                 }
-                $('#loader').html( 'No leads found' );
+
+                vm.loading = false;
+
             });
         },
         savelead: function( e ){
@@ -186,6 +203,21 @@ var leadsVue = new Vue({
                 $(e.target).html( h );
             });
         },
+        goToPage( page ){
+            this.page = page;
+            $('#page').val( this.page );
+            this.getLeads();
+        },
+        prev(){
+            this.page = this.page - 1;
+            $('#page').val( this.page );
+            this.getLeads();
+        },
+        next(){
+            this.page = this.page + 1;
+            $('#page').val( this.page );
+            this.getLeads();
+        },
         showMoreLeads:function(){
             var p = $('#page');
             var next_page = parseInt(p.val()) + 1;
@@ -293,7 +325,6 @@ var leadsVue = new Vue({
                 vm.loading_members = false;
             });
         },
-
         addOneGroupToCampaign( index , groups ){
 
             let nxt = index + 1;
@@ -334,7 +365,6 @@ var leadsVue = new Vue({
                 $.unblockUI();
             });
         },
-
         addGroupsToCampaign(){
 
             let vm  = this;
@@ -359,7 +389,6 @@ var leadsVue = new Vue({
             $('#leadGroupsModal').modal( 'toggle' );
             this.addOneGroupToCampaign( 0 , grp );
         },
-
         addToCampaign(){
             this.openLeadGroupPanel( 'lead_campaign_div' );
             let vm = this;
@@ -455,12 +484,11 @@ var leadsVue = new Vue({
         saveLeadsToGroup:function(){
             var gid = $('#select_lead_group_id').val();
             $('.btn').prop( 'disabled', true );
-            if( !gid ){
+            if( ! gid ){
                 toastr.error( 'No lead group selected');
                 $('.btn').prop( 'disabled', false );
                 return
             }
-
         },
         sendPostcard:function(){
             $('.btn').prop( 'disabled', true );
@@ -700,6 +728,14 @@ var leadsVue = new Vue({
 
             $('#search-btn').html( '<i class="fa fa-spin fa-refresh"></i>' );
             $('.btn').prop( 'disabled', true );
+
+            this.page = 1;
+            $('#page').val( 1 )
+            this.getLeads();
+
+            $('.btn').prop( 'disabled', false );
+            $('#search-btn').html( v );
+            /**
             $.getJSON( "/ajax/leads/search", { tkn: tkn , q:$('#q').val() })
                 .done( function( r ){
                     leadsVue.$data.leads = [];
@@ -714,6 +750,7 @@ var leadsVue = new Vue({
                     $('.btn').prop( 'disabled', false );
                     $('#search-btn').html( v );
                 });
+            **/
         },
         addcampaigns:function( leadid ){
             $('.btn').prop( 'disabled' , true );
@@ -843,13 +880,16 @@ var leadsVue = new Vue({
             return this.selected_leads.length
         },
         displayed_lead_count:function(){
-            return this.leads.length
+            return ( parseInt( this.offset ) + 1 ) +' to '+ ( parseInt( this.offset ) + this.leads.length )
         },
         sortedGroups(){
 
         },
         sortedLeads(){
            return  _.orderBy( this.leads, [ 'date_entered' ], [ 'desc' ] );
+        },
+        totalPages(){
+            return parseInt( this.lead_count / this.limit );
         }
 
     }
