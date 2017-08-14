@@ -41,7 +41,7 @@
                                         <li class="" v-for="p in page_count" :class="p==page ? 'active' : '' ">
                                             <a href="javascript:" @click="goToPage(p)">{{p}}</a>
                                         </li>
-                                        <li>
+                                        <li v-show="page < totalPages ">
                                             <a href="javascript:" aria-label="Next" @click="next()">
                                                 <span aria-hidden="true">&raquo;</span>
                                             </a>

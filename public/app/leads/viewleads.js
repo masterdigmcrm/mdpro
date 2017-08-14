@@ -889,7 +889,7 @@ var leadsVue = new Vue({
            return  _.orderBy( this.leads, [ 'date_entered' ], [ 'desc' ] );
         },
         totalPages(){
-            return parseInt( this.lead_count / this.limit );
+            return parseInt( this.lead_count / this.limit ) + 1;
         }
 
     }
