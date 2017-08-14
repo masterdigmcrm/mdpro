@@ -13,7 +13,7 @@
                         </div>
                         <div  class="col-lg-6 col-md-12">
                             <div class="input-group">
-                                <input class="form-control" type="text" name="q" id="q" placeholder="First Name, Last Name, Email" />
+                                <input class="form-control" type="text" value="" name="q" id="q" placeholder="First Name, Last Name, Email" v-model="q" />
                                 <span class="input-group-btn">
                                     <button id="search-btn" class="btn btn-primary search-btn" v-on:click="search()" type="button">
                                         <i class="fa fa-search"></i> <?php echo trans('leads.search') ?>
@@ -32,7 +32,7 @@
                             </th>
                             <th scope="col">
                                 <div class="col-lg-8">
-                                    <ul class="pagination">
+                                    <ul class="pagination" v-show="page_count.length > 1">
                                         <li>
                                             <a href="javascript:" aria-label="Previous" @click="prev()">
                                                 <span aria-hidden="true">&laquo;</span>
@@ -48,8 +48,9 @@
                                         </li>
                                     </ul>
                                     <br />
-                                <span v-show="!loading" style="font-weight:normal"> &nbsp;&nbsp;&nbsp; {{ displayed_lead_count }} of {{ lead_count}} </span>
-
+                                    <div v-show="leads.length">
+                                    <span v-show="!loading" style="font-weight:normal"> &nbsp;&nbsp;&nbsp; {{ displayed_lead_count }} of {{ lead_count}} </span>
+                                    </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="btn-group pull-right">
@@ -93,7 +94,11 @@
                             <td colspan="2">
                                 <i class="icon-spinner2 spinner"></i> <b>Searching leads...</b>
                             </td>
-
+                        </tr>
+                        <tr class="loader" v-show="!loading && !leads.length">
+                            <td colspan="2">
+                                <b> No leads found </b>
+                            </td>
                         </tr>
                         <tbody>
                             <tr v-for="(lead , index) in sortedLeads">
@@ -144,9 +149,7 @@
                         </tbody>
                     </table>
 
-                    <div v-show="!loading && !leads.length">
-                        No leads found
-                    </div>
+
                 </div>
             </form>
         </div>

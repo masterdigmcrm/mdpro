@@ -38,10 +38,25 @@ class LeadCollection extends LeadEntity{
                 ->whereOr( 'ownerid' , $assigned_to );
         });
 
+        if( $r->typeid ){
+            $query->where( 'l.typeid' , $r->typeid );
+        }
+
+        if( $r->sourceid ){
+            $query->where( 'l.sourceid' , $r->sourceid );
+        }
+
+        if( $r->statusid ){
+            $query->where( 'l.status' , $r->statusid );
+        }
+
         $query->where( 'l.deleted' , 0 );
 
         if( $r->q ){
             $query->whereRaw( "MATCH(first_name,last_name,email1) AGAINST(? IN BOOLEAN MODE )" , [$r->q] );
+            $fields[] =\DB::raw( " MATCH ( first_name,last_name,email1 ) AGAINST( '$r->q' IN BOOLEAN MODE ) as `relevance` " );
+            $this->order_by = 'relevance';
+            $this->order_direction  = 'DESC';
         }
 
         $this->total = $query->count();
