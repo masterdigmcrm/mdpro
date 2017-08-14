@@ -21,6 +21,12 @@ var leadsVue = new Vue({
         lead_types:     [],
         lead_sources:   [],
         lead_campaigns: [],
+
+        statusid: 0,
+        typeid: 0 ,
+        sourceid:0,
+        q: '',
+
         todos:  [],
         campaigns:[],
         postcard_leads:[],
@@ -62,6 +68,7 @@ var leadsVue = new Vue({
                     if( vm.page == vm.page_count[0] || vm.page == vm.page_count[ l ] || vm.page == 1 ){
                         vm.page_count = data.page_count;
                     }
+
 
                 }else{
                     toastr.error( data.message );
@@ -688,40 +695,6 @@ var leadsVue = new Vue({
                 toastr.error('Something went wrong');
             });
 
-            /**
-            $.getJSON( "/ajax/leads/getlead", { lid: lid, tkn: tkn })
-                .done( function( data ){
-
-                    leadsVue.$data.lead = data.lead;
-                    $('.loader').hide();
-                    // { facebook:false,twitter:false,pinterest:false,linkedin:false,googleplus:false,youtube:false };
-                    for (var prop in leadsVue.$data.contact) {
-                        leadsVue.$data.contact.prop = false;
-                    }
-
-                    leadsVue.$data.contact.facebook     = data.fullcontact.facebook;
-                    leadsVue.$data.contact.twitter      = data.fullcontact.twitter;
-                    leadsVue.$data.contact.pinterest    = data.fullcontact.pinterest;
-                    leadsVue.$data.contact.youtube      = data.fullcontact.youtube;
-                    leadsVue.$data.contact.googleplus   = data.fullcontact.googleplus;
-            });
-
-
-            $.getJSON( "/ajax/leads/getnotes", { lid: lid, tkn: tkn })
-                .done( function( data ){
-                    for( i = 0 ; i< data.notes.length ;i++ ){
-                        leadsVue.$data.notes.push( data.notes[i] );
-                    }
-                    $('.loader').hide()
-                });
-            $.getJSON( "/ajax/leads/gettodos", { lid: lid, tkn: tkn })
-                .done( function( data ){
-                    for( i = 0 ; i< data.todos.length ;i++ ){
-                        leadsVue.$data.todos.push( data.todos[i] );
-                    }
-                    $('.loader').hide()
-                });
-             ***/
         },
         search: function(){
             var v = $('#search-btn').html();
@@ -818,6 +791,12 @@ var leadsVue = new Vue({
         advProcessSearch:function(){
             $('.btn').prop( 'disabled' , true );
             $('#adv_search_button').html( '<i class="fa fa-spin fa-refresh"></i>' );
+            this.getLeads();
+
+            $('#advanceSearchModal').modal( 'toggle' );
+            $('#adv_search_button').html( 'Search' );
+            $('.btn').prop( 'disabled' , false );
+            /**
             $.post('/ajax/leads/advs' , $('#leadsForm').serialize() )
             .done( function( data ){
                 $('.btn').prop( 'disabled' , false );
@@ -838,6 +817,7 @@ var leadsVue = new Vue({
                 toastr.error( 'Something went wrong');
                 $('#adv_search_button').html( 'Search' );
             });
+            **/
         },
         closeSummary(){
             this.openPanel( 'leadList');

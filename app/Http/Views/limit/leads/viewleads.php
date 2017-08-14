@@ -31,14 +31,47 @@
                                 <label><input type="checkbox" class="" id="cb-toggle"/><span></span></label>
                             </th>
                             <th scope="col">
-                                <div class="col-lg-8">
+                                <div class="col-lg-12">
+                                    <div class="btn-group pull-right">
+                                        <a href="javascript:" class="btn btn-primary btn-sm add-new" @click="editlead( 0 )"> <i class="fa fa-plus"></i> <?php echo trans('leads.add new') ?> </a>
+
+                                        <button type="button" class="btn btn-sm btn-default btn-fit-height dropdown-toggle"
+                                                data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
+                                            <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu" style="padding:12px">
+                                            <li>
+                                                With Selected
+                                            </li>
+                                            <!--
+                                        <li>
+                                            <a href="javascript:" class="add-postcard"  v-on:click="selectPostcard"><?php echo trans('leads.send postcard') ?></a>
+                                        </li>
+                                        -->
+                                            <li><a href="javascript:" class="add-bucket"  v-on:click="addToGroup()"><?php echo trans('leads.add to group') ?></a></li>
+                                            <li><a href="javascript:" class="delete_leads"  v-on:click="deleteLeads()"> <?php echo trans('leads.delete leads') ?> </a></li>
+
+                                            <li>
+                                                Options
+                                            </li>
+                                            <li class="divider">
+                                            </li>
+                                            <li>
+                                                <a href="javascript:" v-on:click="createLeadGroup()"><?php echo trans('leads.create lead groups') ?> </a>
+                                            </li>
+                                            <li>
+                                                <!--<a href="<?php echo Url('leads/groups') ?>"><?php echo trans('leads.view lead groups') ?> </a>-->
+                                                <a href="javascript:" @click="openGroupList"><?php echo trans('leads.view lead groups') ?> </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                     <ul class="pagination" v-show="page_count.length > 1">
                                         <li>
                                             <a href="javascript:" aria-label="Previous" @click="prev()">
                                                 <span aria-hidden="true">&laquo;</span>
                                             </a>
                                         </li>
-                                        <li class="" v-for="p in page_count" :class="p==page ? 'active' : '' ">
+                                        <li class="hidden-xs" v-for="p in page_count" :class="p==page ? 'active' : '' ">
                                             <a href="javascript:" @click="goToPage(p)">{{p}}</a>
                                         </li>
                                         <li v-show="page < totalPages ">
@@ -49,44 +82,10 @@
                                     </ul>
                                     <br />
                                     <div v-show="leads.length">
-                                    <span v-show="!loading" style="font-weight:normal"> &nbsp;&nbsp;&nbsp; {{ displayed_lead_count }} of {{ lead_count}} </span>
+                                        <span v-show="!loading" style="font-weight:normal"> {{ displayed_lead_count }} of {{ lead_count}} </span>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
-                                    <div class="btn-group pull-right">
-                                    <a href="javascript:" class="btn btn-primary btn-sm add-new" @click="editlead( 0 )"> <i class="fa fa-plus"></i> <?php echo trans('leads.add new') ?> </a>
 
-                                    <button type="button" class="btn btn-sm btn-default btn-fit-height dropdown-toggle"
-                                            data-toggle="dropdown" data-hover="dropdown" data-delay="1000" data-close-others="true">
-                                        <i class="fa fa-angle-down"></i>
-                                    </button>
-                                    <ul class="dropdown-menu pull-right" role="menu" style="padding:12px">
-                                        <li>
-                                            With Selected
-                                        </li>
-                                        <!--
-                                        <li>
-                                            <a href="javascript:" class="add-postcard"  v-on:click="selectPostcard"><?php echo trans('leads.send postcard') ?></a>
-                                        </li>
-                                        -->
-                                        <li><a href="javascript:" class="add-bucket"  v-on:click="addToGroup()"><?php echo trans('leads.add to group') ?></a></li>
-                                        <li><a href="javascript:" class="delete_leads"  v-on:click="deleteLeads()"> <?php echo trans('leads.delete leads') ?> </a></li>
-
-                                        <li>
-                                            Options
-                                        </li>
-                                        <li class="divider">
-                                        </li>
-                                        <li>
-                                            <a href="javascript:" v-on:click="createLeadGroup()"><?php echo trans('leads.create lead groups') ?> </a>
-                                        </li>
-                                        <li>
-                                            <!--<a href="<?php echo Url('leads/groups') ?>"><?php echo trans('leads.view lead groups') ?> </a>-->
-                                            <a href="javascript:" @click="openGroupList"><?php echo trans('leads.view lead groups') ?> </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                </div>
                             </th>
                         </tr>
                         </thead>
