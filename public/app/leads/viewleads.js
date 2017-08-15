@@ -8,7 +8,7 @@ $(document).ready(
 var leadsVue = new Vue({
     el: '#leads_div',
     data:{
-        lead:   {},
+        lead:   { leadid: 0 , assigned_to : 0 },
         lead_count:0,
         page:   1,
         page_count:[],
@@ -33,6 +33,7 @@ var leadsVue = new Vue({
         addEditNote:'Add',
         lead_groups:[],
         selected_leads:[],
+        my_staff: [],
         group:{},
         group_members:[],
         contact:{facebook:false,twitter:false,pinterest:false,linkedin:false,googleplus:false,youtube:false},
@@ -839,10 +840,11 @@ var leadsVue = new Vue({
             $.get( '/ajax/leads/init' )
             .done(function( data ){
                 if( data.success){
-                    vm.lead_status = data.lead_status;
-                    vm.lead_types = data.lead_types;
+                    vm.lead_status  = data.lead_status;
+                    vm.lead_types   = data.lead_types;
                     vm.lead_sources = data.lead_sources;
-                    vm.countries = data.countries;
+                    vm.countries    = data.countries;
+                    vm.my_staff     = data.staff;
                 }else{
                     toastr.error( data.message );
                 }

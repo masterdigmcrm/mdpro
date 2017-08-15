@@ -15,6 +15,7 @@ class LeadCollection extends LeadEntity{
         $this->setLpo( $r );
         $this->order_by = $r->order_by ? $r->order_by :  'date_entered';
         $this->order_direction = $r->order_direction ? $r->order_direction :  'DESC';
+
         $assigned_to = $r->assigned_to;
 
         $fields = [ 'l.*' , 's.statusid',  's.status', 't.type', 'so.source' ];
@@ -33,10 +34,25 @@ class LeadCollection extends LeadEntity{
             return $lead->vuefy();
         }
 
-        $query->where( function( $query ) use( $assigned_to ) {
-            $query->where( 'assigned_to' , $assigned_to )
-                ->whereOr( 'ownerid' , $assigned_to );
-        });
+        if( $r->assigned_to ){
+
+            $query->where( function( $q ) use( $assigned_to ) {
+                if( is_array( $assigned_to )){
+                    $q->whereIn( 'assigned_to' , $assigned_to );
+                }else{
+                    $q->where( 'assigned_to' , $assigned_to );
+                }
+
+                $q->whereOr( 'ownerid' , $assigned_to );
+            });
+
+        }else{
+
+            // get all managed users
+
+
+        }
+
 
         if( $r->typeid ){
             $query->where( 'l.typeid' , $r->typeid );

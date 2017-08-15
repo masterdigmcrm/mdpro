@@ -24,6 +24,7 @@
                         </div>
                     </header><!-- End #header-sec -->
                     <br />
+                    <!-- Leads list table --->
                     <table class="table table-bordered table-hover">
                         <thead>
                         <tr class="blue">
@@ -147,8 +148,7 @@
                         </tr>
                         </tbody>
                     </table>
-
-
+                    <!-- end of leads list table -->
                 </div>
             </form>
         </div>

@@ -75,6 +75,8 @@ class UserEntity extends Model implements AuthenticatableContract, CanResetPassw
         return $this->hasOne( UserMap::class, 'userid' ,'id' );
     }
 
+
+
     public static function instance( $key , $value = null )
     {
         if( $value === null ){

@@ -20,6 +20,7 @@ use App\Models\Marketing\CampaignActionCollection;
 use App\Models\Marketing\CampaignActionEntity;
 use App\Models\Marketing\CampaignCollection;
 use App\Models\Users\UserEntity;
+use App\Models\Users\UserMap;
 use Helpers\Layout;
 use Illuminate\Http\Request;
 
@@ -27,13 +28,25 @@ class AjaxLeadsController{
 
     public function getLeads( Request $r )
     {
+        $user_id =  $r->user()->id;
+        
+        if( $r->assigned_to ) {
+            $assigned_to[] = $r->assigend_to;
+        }else{
+            $user_map = UserMap::byUserId( $user_id );
+            $assigned_to = $user_map->getAllSubordinates( [ 'ids-only' => true ] );
+            $assigned_to[] = $user_id;
+        }
+
+        $r->merge( [ 'assigned_to' => $assigned_to ] );
 
         $leads = new LeadCollection();
-        $r->request->add([ 'assigned_to' => $r->user()->id ]);
+        $lead_collection = $leads->getCollection( $r );
 
         return [
             'success' => true,
-            'leads' => $leads->getCollection( $r ),
+            //'query_log' => \DB::getQueryLog(),
+            'leads' => $lead_collection,
             'total' => $leads->getTotal(),
             'offset' => $leads->getOffset(),
             'limit' => $leads->getLimit(),
@@ -202,17 +215,21 @@ class AjaxLeadsController{
 
     public function init( Request $r )
     {
+
         $countries = ( new Countries() )->getCollection( $r );
         $lead_status = ( new LeadStatusMap() )->getCollection( $r );
         $lead_types = (new LeadTypes() )->getCollection( $r );
         $lead_sources = (new LeadSource() )->getCollection( $r );
 
+        $staff = ( UserMap::byUserId( $r->user()->id )->getAllSubordinates( [ 'from-active-users-only' => true ] ) ) ;
+
         return [
-            'success' =>true,
-            'countries' => $countries,
-            'lead_status' => $lead_status,
-            'lead_types' => $lead_types,
-            'lead_sources' => $lead_sources
+            'success'       => true,
+            'countries'     => $countries,
+            'lead_status'   => $lead_status,
+            'lead_types'    => $lead_types,
+            'lead_sources'  => $lead_sources,
+            'staff' => $staff
         ];
 
     }

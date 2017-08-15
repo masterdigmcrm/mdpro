@@ -114,15 +114,21 @@
                         <label for="company">Assign To:</label>
                     </div>
                     <div class="col-lg-7">
-                        <?php echo $user_map->subordinateSelectList(); ?>
+                        <div class="form-group">
+                            <select name="assigned_to" class="form-control" v-model="lead.assigned_to">
+                                <option value="" v-for="s in my_staff" :value="s.id"> {{ s.name }} </option>
+                            </select>
+                        </div>
+                        <?php //echo $user_map->subordinateSelectList(); ?>
                     </div>
                 <?php } ?>
             </div>
         </div>
+
         <div class="panel panel-white">
             <div class="panel-body">
-                <button type="button" class="btn btn-success" v-on:click="savelead">Save</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" v-on:click="savelead"> Save </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"> Cancel </button>
             </div>
         </div>
 

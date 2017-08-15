@@ -24,6 +24,7 @@ class UserMap extends Model
     public static function byUserId( $userid , $options = [] )
     {
             $with = ['account'];
+
             $user = static::where( 'a.userid' , $userid )
                 ->from( 'jos_mdigm_broker_user_map as a' )
                 ->leftJoin( 'jos_mdigm_contacts as c' , 'c.contactid', 'a.contactid' )
@@ -60,6 +61,9 @@ class UserMap extends Model
     /**
      * This will set all user relationships like
      * who are underneath or who are supervisors for this user
+     * options :
+     *      from-active-users-only : boolean
+     *      ids-only : boolean  returns an array of user ids
      */
     public function getAllSubordinates( $options =[])
     {
@@ -68,30 +72,29 @@ class UserMap extends Model
         if( $this->broker_userid == $this->userid ){
 
             // get all user accounts under this user map
-
+            $fields = [ 'b.id' , 'b.imagePath' , 'b.name' ];
             $users_builder = UserMap::where( 'broker_userid' ,   $this->userid )
                 ->from( 'jos_mdigm_broker_user_map as a' )
                 ->join( 'jos_users as b' , 'b.id', '=', 'a.userid' )
-                ->orderby( 'name')
-                ->select( 'b.*' );
+                ->orderby( 'name');
         }else{
 
             $users_builder = UserMap::where( 'supervisor_userid' ,   $this->userid )
                 ->from( 'jos_mdigm_broker_user_map as a' )
                 ->join( 'jos_users as b' , 'b.id', '=', 'a.userid' )
-                ->orderby( 'name' )
-                ->select( 'b.*' );
+                ->orderby( 'name' );
 
         }
 
-        // this
         if( ! empty( $options['from-active-users-only'] ) ){
             $users_builder->where( 'a.status' , 'active' );
         }
 
-        $users = $users_builder->get();
+        $users = $users_builder->get( $fields );
 
         if( ! empty($options['ids-only']) ){
+
+            $users_container = [];
 
             foreach( $users as $u ){
                 $users_container[] = $u->id;
