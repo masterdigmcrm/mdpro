@@ -76,7 +76,6 @@ class UserEntity extends Model implements AuthenticatableContract, CanResetPassw
     }
 
 
-
     public static function instance( $key , $value = null )
     {
         if( $value === null ){

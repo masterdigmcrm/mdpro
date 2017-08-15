@@ -29,9 +29,9 @@ class AjaxLeadsController{
     public function getLeads( Request $r )
     {
         $user_id =  $r->user()->id;
-        
+
         if( $r->assigned_to ) {
-            $assigned_to[] = $r->assigend_to;
+            $assigned_to[] = $r->assigned_to;
         }else{
             $user_map = UserMap::byUserId( $user_id );
             $assigned_to = $user_map->getAllSubordinates( [ 'ids-only' => true ] );
@@ -41,11 +41,12 @@ class AjaxLeadsController{
         $r->merge( [ 'assigned_to' => $assigned_to ] );
 
         $leads = new LeadCollection();
+        \DB::enableQueryLog();
         $lead_collection = $leads->getCollection( $r );
 
         return [
             'success' => true,
-            //'query_log' => \DB::getQueryLog(),
+            'query_log' => \DB::getQueryLog(),
             'leads' => $lead_collection,
             'total' => $leads->getTotal(),
             'offset' => $leads->getOffset(),

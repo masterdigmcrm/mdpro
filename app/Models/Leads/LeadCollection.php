@@ -2,6 +2,7 @@
 
 namespace App\Models\Leads;
 
+use App\Models\Accounts\AccountEntity;
 use Illuminate\Http\Request;
 
 class LeadCollection extends LeadEntity{
@@ -34,25 +35,18 @@ class LeadCollection extends LeadEntity{
             return $lead->vuefy();
         }
 
-        if( $r->assigned_to ){
+        $owner_id = $r->owner_id ? $r->owner_id : AccountEntity::me()->userid  ;
+        $query->where( 'l.ownerid' , $owner_id );
 
-            $query->where( function( $q ) use( $assigned_to ) {
-                if( is_array( $assigned_to )){
-                    $q->whereIn( 'assigned_to' , $assigned_to );
-                }else{
-                    $q->where( 'assigned_to' , $assigned_to );
-                }
+        if( $assigned_to ){
 
-                $q->whereOr( 'ownerid' , $assigned_to );
-            });
-
-        }else{
-
-            // get all managed users
-
+            if( is_array( $assigned_to ) ){
+                $query->whereIn( 'l.assigned_to' , $assigned_to );
+            }else{
+                $query->where( 'l.assigned_to' , $assigned_to );
+            }
 
         }
-
 
         if( $r->typeid ){
             $query->where( 'l.typeid' , $r->typeid );
