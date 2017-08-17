@@ -67,7 +67,7 @@ class Layout {
 		$subdir = env('SUBDIR') ? '/'.env('SUBDIR'): '';
 		$path = substr( $path , 0 , 1 ) == '/' ? $path : '/'.$path;
 
-		return '<script src="'.$subdir.$path.'"></script>'."\r";
+		return '<script src="'.$subdir.$path.'"></script>'."\r\n";
 	}
 
 	public function renderStyle( $path ){
@@ -170,8 +170,10 @@ class Layout {
 
 	public static function loadJqueryUI()
 	{
-		static::instance()->addStyle( '/css/jquery-ui/smoothness/jquery-ui.min.css' );
-		static::instance()->addScript( '/js/core/libraries/jquery_ui/jquery-ui.min.js' );
+		//static::instance()->addStyle( '/css/jquery-ui/smoothness/jquery-ui.min.css' );
+		//static::instance()->addScript( '/js/core/libraries/jquery_ui/jquery-ui.min.js' );
+		static::instance()->addStyle( '/plugins/jquery-ui/jquery-ui.min.css' );
+		static::instance()->addScript( '/plugins/jquery-ui/jquery-ui.min.js' );
 	}
 
 	public static function loadPagination( $design = 1 )

@@ -66,6 +66,7 @@
                                             </li>
                                         </ul>
                                     </div>
+                                    <!--------- Pagination ----------->
                                     <ul class="pagination" v-show="page_count.length > 1">
                                         <li>
                                             <a href="javascript:" aria-label="Previous" @click="prev()">
@@ -81,6 +82,7 @@
                                             </a>
                                         </li>
                                     </ul>
+                                    <!----------------------------->
                                     <br />
                                     <div v-show="leads.length">
                                         <span v-show="!loading" style="font-weight:normal"> {{ displayed_lead_count }} of {{ lead_count}} </span>

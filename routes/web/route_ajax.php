@@ -84,11 +84,13 @@ if( in_array( \Request::segment(2) , [ 'marketing', 'campaign' , 'campaigns'] ) 
         Route::post( 'action', 'MarketingAjaxController@saveAction' );
         Route::delete( 'action', 'MarketingAjaxController@deleteAction' );
         Route::get( 'init', 'MarketingAjaxController@init' );
+
     });
 
     Route::group( [ 'prefix' => 'marketing', 'namespace' => 'Components\Marketing' ], function(){
         Route::get( 'postcards', 'MarketingAjaxController@getPostcards' );
         Route::delete( 'campaign', 'MarketingAjaxController@deleteCampaign' );
+        Route::get( 'history', 'MarketingAjaxController@getHistory' );
     });
 
 

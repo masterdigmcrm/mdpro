@@ -35,6 +35,7 @@ if( \Request::segment(1) == 'component'){
         if( in_array( \Request::segment(2) , [ 'marketing' ] ) ){
             Route::get('marketing', 'Components\Marketing\MarketingController@index' );
             Route::get('marketing/postcards', 'Components\Marketing\MarketingController@postcards' );
+            Route::get('marketing/history', 'Components\Marketing\MarketingController@history' );
             return;
         }
 

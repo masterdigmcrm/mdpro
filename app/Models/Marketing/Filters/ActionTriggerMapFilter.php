@@ -14,12 +14,16 @@ class ActionTriggerMapFilter extends AbstractFilter{
 
     public function statusFilter( $k , $v  )
     {
-        $this->query->where( 'm.status' , $v );
+        if( $v ){
+            $this->query->where( 'm.status' , $v );
+        }
     }
     
     public function actionTypeIdFilter( $k, $v  )
     {
-        $this->query->where( 'action_typeid' , $v );
+        if( $v ){
+            $this->query->where( 'action_typeid' , $v );
+        }
     }
     
     public function actionIdFilter( $k , $v )
@@ -34,5 +38,11 @@ class ActionTriggerMapFilter extends AbstractFilter{
     public function dateSendingSchedFilter( $k, $v )
     {
         $this->query->whereDate( 'date_sending_sched', $v );
+    }
+
+    public function leadidFilter( $k , $v ){
+        if( $v ){
+            $this->query->where( 'l.leadid' , $v );
+        }
     }
 }

@@ -42,6 +42,26 @@ class MarketingAjaxController extends Controller
             'lead_status' => $lead_status
         ];
     }
+    
+    public function initHistory( Request $r )
+    {
+
+    }
+
+    public function getHistory( Request $r )
+    {
+        $r->merge( ['with_total' => true ] );
+        $history_entries =   new ActionTriggerMap ;
+
+        return [
+            'success' =>true,
+            'entries' => $history_entries->getCollection( $r ),
+            'total' => $history_entries->getTotal(),
+            'page_count' => $history_entries->getPageCount( true ),
+            'total_pages' => $history_entries->getPageCount(),
+
+        ];
+    }
 
     public function saveCampaign( Request $r )
     {

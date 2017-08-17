@@ -77,6 +77,14 @@ class LeadCollection extends LeadEntity{
 
         $this->collection =  $query->get( $fields );
 
+        if( $r->autocomplete ){
+            $_arr = [];
+            foreach( $this->collection as $l ){
+                $_arr[] = [ 'id' => $l->leadid , 'value' => $l->displayName() ];
+            }
+
+            return $_arr;
+        }
         return $this->vuefyThisCollection();
     }
 

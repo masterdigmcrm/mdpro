@@ -15,8 +15,7 @@ var pVue = new Vue({
                 if( data.success ){
                     vm.postcards = data.postcards;
                 }
-            })
-            .error(function( data ){
+            }).error(function( data ){
 
             });
         },

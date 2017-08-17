@@ -41,4 +41,16 @@ class MarketingController extends ComponentsBaseController{
         return $this->layout;
     }
 
+    public function history( Request $r )
+    {
+        $content = view( 'marketing.history' )->render();
+        $this->layout->content = $content;
+
+        Layout::loadVue();
+        Layout::loadJqueryUI();
+        Layout::instance()->addScript( '/app/marketing/marketing_history.js');
+
+        return $this->layout;
+    }
+
 }

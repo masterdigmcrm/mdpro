@@ -8,6 +8,7 @@
                 <ul>
                     <li><a href="<?php echo Url('component/marketing') ?>"><i class="icon-stack"></i> <span> Marketing Campaigns </span></a></li>
                     <li><a href="<?php echo Url('component/marketing/postcards') ?>"><i class="icon-image5"></i> <span> Postcards </span></a></li>
+                    <li><a href="<?php echo Url('component/marketing/history') ?>"><i class="icon-image5"></i> <span> History </span></a></li>
                 </ul>
             </li>
             <li><a href="<?php echo Url('component/settings') ?>"><i class="icon-gear"></i> <span> Settings </span></a></li>

@@ -77,20 +77,24 @@ class ActionTriggerMap extends BaseModel{
      */
     public function getCollection( Request $r )
     {
-
         $this->setLpo( $r );
         $this->fields = [ 'm.*' , 'l.assigned_to' , 'l.ownerid' , 'l.first_name', 'l.last_name', 'l.stateid',
-            'l.primary_address_street' ,'l.primary_address_city' ,'l.primary_address_state', 'l.primary_address_country', 'l.primary_address_postalcode',
-            'a.postcard_id' ];
+            'l.primary_address_street' ,'l.primary_address_city' ,'l.primary_address_state', 'l.primary_address_country',
+            'l.primary_address_postalcode',
+            'a.postcard_id' , 'a.action_typeid', 'a.subject' , 't.type' ];
 
         $this->query    = static::from( $this->table.' as m' );
         $this->query->join( 'jos_mdigm_marketing_actions as a', 'm.actionid' , '=', 'a.actionid'  );
-        $this->query->join( 'jos_mdigm_leads as l', 'l.leadid' , '=', 'm.leadid'  );
+        $this->query->join( 'jos_mdigm_leads as l', 'l.leadid' , '=', 'm.leadid' );
+        $this->query->join( 'jos_mdigm_marketing_type as t', 't.typeid' , '=', 'a.action_typeid'  );
 
         // apply filters
         $this->query = ( new ActionTriggerMapFilter( $this->query ) )
             ->applyFilter( $r->all() );
 
+        if( $r->from && $r->to ){
+            $this->query->whereBetween( 'date_sending_sched' , [ $r->from , $r->to ] );
+        }
         // if need to return total entries
         if( $r->with_total ){
             $this->total = $this->query->count();

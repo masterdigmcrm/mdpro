@@ -74,11 +74,12 @@ class BaseModel extends Model
 
             if( $count > 6 ){
 
-                $start  =   $this->page - 3;
+                $start  =  $this->page - 3;
                 $start  =  ( $start < 1 )  ? 1 : $start;
 
                 $end    = $this->page + 3;
                 $end    = $end > $count ? $count : $end;
+                $end = $end < 6 ? 6 : $end;
 
                 for( $i = $start ; $i <= $end; $i++  ){
                     $_arr[] = $i;

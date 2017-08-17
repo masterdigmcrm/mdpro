@@ -41,12 +41,16 @@ class AjaxLeadsController{
         $r->merge( [ 'assigned_to' => $assigned_to ] );
 
         $leads = new LeadCollection();
-        \DB::enableQueryLog();
+        // return autocomplete formatted data
+        if( $r->autocomplete ){
+            $r->merge( ['q' => $r->term ]);
+            return $leads->getCollection( $r );
+        }
+
         $lead_collection = $leads->getCollection( $r );
 
         return [
             'success' => true,
-            'query_log' => \DB::getQueryLog(),
             'leads' => $lead_collection,
             'total' => $leads->getTotal(),
             'offset' => $leads->getOffset(),
