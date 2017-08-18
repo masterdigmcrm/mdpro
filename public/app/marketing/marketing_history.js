@@ -15,6 +15,8 @@ var hVue = new Vue({
         },
         getHistory(){
             let vm = this;
+            // disable get history first due to query optimization issues
+            return false;
             vm.loading = true;
             $.get('/ajax/marketing/history' , $('#sForm').serialize() )
             .done( function( data ){
