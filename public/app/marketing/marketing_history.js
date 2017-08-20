@@ -7,7 +7,8 @@ var hVue = new Vue({
         more_search_options: false,
         page_count:[],
         current_page: 1,
-        total_pages: 0
+        total_pages: 0,
+        searching_lead:false
     },
     methods:{
         init(){
@@ -64,6 +65,12 @@ $(document).ready(
         $( "#lead_name" ).autocomplete({
             source: '/ajax/leads/getleads?autocomplete=1',
             minLength: 2,
+            search:function( event , ui ){
+                hVue.searching_lead = true;
+            },
+            open:function( event , ui ){
+                hVue.searching_lead = false;
+            },
             select: function( event, ui ){
                 $('#leadid').val( ui.item.id );
             }

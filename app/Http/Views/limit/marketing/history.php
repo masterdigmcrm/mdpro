@@ -21,8 +21,10 @@
                         </div>
                         <div class="col-lg-3">
                             <div class="form-group">
+
                                 <label for="q"> Lead Name </label>
                                 <input type="text" name="q" value="" id="lead_name" class="form-control" />
+                                <i v-show="searching_lead" class="fa fa-spin fa-refresh" style="position:relative;top:-26px;left:90%"></i>
                             </div>
                         </div>
 
