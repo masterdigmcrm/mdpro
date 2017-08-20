@@ -53,9 +53,11 @@ class MarketingAjaxController extends Controller
         $r->merge( ['with_total' => true ] );
         $history_entries =   new ActionTriggerMap ;
 
+        $collection =  $history_entries->getCollection( $r );
+
         return [
             'success' =>true,
-            'entries' => $history_entries->getCollection( $r ),
+            'entries' => $collection,
             'total' => $history_entries->getTotal(),
             'page_count' => $history_entries->getPageCount( true ),
             'total_pages' => $history_entries->getPageCount(),

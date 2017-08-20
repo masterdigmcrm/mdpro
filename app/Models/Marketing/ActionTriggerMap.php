@@ -4,6 +4,7 @@ namespace App\Models\Marketing;
 
 
 use App\Http\Models\Users\UserMap;
+use App\Models\Accounts\AccountEntity;
 use App\Models\BaseModel;
 use App\Models\Marketing\Filters\ActionTriggerMapFilter;
 use App\Models\Users\UserEntity;
@@ -83,10 +84,13 @@ class ActionTriggerMap extends BaseModel{
             'l.primary_address_postalcode',
             'a.postcard_id' , 'a.action_typeid', 'a.subject' , 't.type' ];
 
-        $this->query    = static::from( $this->table.' as m' );
+        $this->query  = static::from( $this->table.' as m' );
         $this->query->join( 'jos_mdigm_marketing_actions as a', 'm.actionid' , '=', 'a.actionid'  );
         $this->query->join( 'jos_mdigm_leads as l', 'l.leadid' , '=', 'm.leadid' );
         $this->query->join( 'jos_mdigm_marketing_type as t', 't.typeid' , '=', 'a.action_typeid'  );
+
+        $owner_id = $r->ownerid ? $r->ownerid : AccountEntity::me()->userid;
+        $this->query->where( 'a.ownerid' , $owner_id );
 
         // apply filters
         $this->query = ( new ActionTriggerMapFilter( $this->query ) )
