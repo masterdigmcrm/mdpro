@@ -16,7 +16,9 @@ var hVue = new Vue({
         },
         getHistory(){
             let vm = this;
-
+            if( ! $('#lead_name').val() ){
+                $('#leadid').val( 0 )
+            }
             vm.loading = true;
             $.get('/ajax/marketing/history' , $('#sForm').serialize() )
             .done( function( data ){
@@ -33,6 +35,9 @@ var hVue = new Vue({
             });
         },
         search(){
+            // current page unable
+            this.current_page = 1;
+            $('#page').val( 1 );
             this.getHistory();
         },
         goToPage( page ){
